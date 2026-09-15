@@ -6,11 +6,11 @@
     "implementationCommit": "dee9fd101e3651a33643e6c1a86a9a646f8295cb"
   },
   "changeRequest": {
-    "kind": null,
-    "id": null,
-    "url": null,
-    "headCommit": null,
+    "kind": "pr",
+    "id": "1",
+    "url": "https://github.com/Sean-XL196/versioned-prototype-workbench/pull/1",
+    "headCommit": "df47320b49f637c1cc6afcb6ffd6e9e6b01c4f13",
     "mergeCommit": null
   },
-  "updatedAt": "2026-09-15T09:55:59.311Z"
+  "updatedAt": "2026-09-15T10:05:02.722Z"
 }
