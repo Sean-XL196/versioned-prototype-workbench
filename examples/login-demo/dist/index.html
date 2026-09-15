@@ -1,0 +1,324 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>身份认证登录原型 · 版本化原型工作台</title><style>:root {
+  color-scheme: light;
+  --wb-font: Inter, "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --wb-canvas: #f3f5f6;
+  --wb-surface: #ffffff;
+  --wb-surface-muted: #f8fafb;
+  --wb-ink: #172126;
+  --wb-muted: #607078;
+  --wb-border: #d8dfe3;
+  --wb-border-strong: #b9c5ca;
+  --wb-brand: #0b6b5b;
+  --wb-brand-strong: #075448;
+  --wb-brand-soft: #e7f3f0;
+  --wb-blue: #245b8f;
+  --wb-blue-soft: #eaf2f9;
+  --wb-amber: #925706;
+  --wb-amber-soft: #fff4dc;
+  --wb-red: #b42318;
+  --wb-red-soft: #fff0ee;
+  --wb-success: #16794a;
+  --wb-success-soft: #eaf7f0;
+  --wb-sidebar: 272px;
+  --wb-header: 60px;
+  --wb-radius: 6px;
+  font-family: var(--wb-font);
+  color: var(--wb-ink);
+  background: var(--wb-canvas);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+* { box-sizing: border-box; }
+html, body { min-width: 320px; min-height: 100%; margin: 0; background: var(--wb-canvas); }
+body, button, input { font: inherit; letter-spacing: 0; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid rgba(36, 91, 143, 0.28); outline-offset: 2px; }
+
+.wb-shell { min-height: 100vh; }
+.wb-topbar { height: var(--wb-header); border-bottom: 1px solid var(--wb-border); padding: 0 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: var(--wb-surface); }
+.wb-brand { min-width: 0; display: flex; align-items: center; gap: 11px; }
+.wb-brand__mark { width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: #fff; background: var(--wb-brand); font-size: 12px; font-weight: 800; }
+.wb-brand__copy { min-width: 0; }
+.wb-brand__name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 760; }
+.wb-brand__meta { display: block; color: var(--wb-muted); font-size: 11px; }
+.wb-topbar__right { display: flex; align-items: center; gap: 10px; }
+.wb-overall { color: var(--wb-muted); font-size: 12px; }
+.wb-menu-button { width: 38px; height: 38px; border: 1px solid var(--wb-border-strong); border-radius: 4px; display: none; place-items: center; color: var(--wb-ink); background: var(--wb-surface); cursor: pointer; }
+
+.wb-body { min-height: calc(100vh - var(--wb-header)); display: grid; grid-template-columns: var(--wb-sidebar) minmax(0, 1fr); }
+.wb-sidebar { border-right: 1px solid var(--wb-border); padding: 18px 14px 28px; background: #f9fbfb; }
+.wb-sidebar__heading { margin: 0 8px 12px; display: flex; align-items: center; justify-content: space-between; color: var(--wb-muted); font-size: 11px; font-weight: 760; text-transform: uppercase; }
+.wb-sidebar__count { min-width: 22px; border-radius: 999px; padding: 1px 7px; color: var(--wb-brand-strong); background: var(--wb-brand-soft); text-align: center; }
+.wb-module { margin-bottom: 18px; }
+.wb-module__title { margin: 0 8px 6px; color: var(--wb-ink); font-size: 12px; font-weight: 720; }
+.wb-page-button { width: 100%; min-height: 44px; border: 0; border-radius: 5px; padding: 7px 9px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; color: var(--wb-muted); background: transparent; text-align: left; cursor: pointer; }
+.wb-page-button:hover { background: #eef2f3; }
+.wb-page-button[aria-current="page"] { color: var(--wb-brand-strong); background: var(--wb-brand-soft); }
+.wb-page-button__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 680; }
+.wb-page-button__version { color: inherit; font-size: 11px; font-variant-numeric: tabular-nums; }
+.wb-page-button__state { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.wb-state-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--wb-amber); }
+.wb-state-dot--aligned { background: var(--wb-success); }
+
+.wb-main { min-width: 0; padding-bottom: 54px; }
+.wb-summary { border-bottom: 1px solid var(--wb-border); padding: 26px clamp(18px, 3vw, 40px); background: var(--wb-surface); }
+.wb-summary__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 22px; }
+.wb-eyebrow { margin: 0 0 6px; color: var(--wb-brand-strong); font-size: 11px; font-weight: 780; text-transform: uppercase; }
+.wb-summary h1 { margin: 0; font-size: 25px; line-height: 1.25; }
+.wb-summary__description { max-width: 720px; margin: 8px 0 0; color: var(--wb-muted); }
+.wb-summary__release { border: 1px solid var(--wb-border); border-radius: var(--wb-radius); padding: 10px 12px; color: var(--wb-muted); background: var(--wb-surface-muted); font-size: 12px; }
+.wb-summary__release strong { display: block; color: var(--wb-ink); font-size: 14px; }
+.wb-stats { margin-top: 24px; border-block: 1px solid var(--wb-border); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.wb-stat { min-width: 0; padding: 13px 16px; border-right: 1px solid var(--wb-border); }
+.wb-stat:first-child { padding-left: 0; }
+.wb-stat:last-child { border-right: 0; }
+.wb-stat__label { color: var(--wb-muted); font-size: 11px; }
+.wb-stat__value { margin-top: 2px; font-size: 19px; font-weight: 760; font-variant-numeric: tabular-nums; }
+
+.wb-content { padding: 26px clamp(18px, 3vw, 40px); }
+.wb-page { display: none; }
+.wb-page.is-active { display: block; }
+.wb-page__head { margin-bottom: 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.wb-page__head h2 { margin: 0; font-size: 21px; line-height: 1.3; }
+.wb-page__path { margin-top: 5px; color: var(--wb-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.wb-actions { display: flex; align-items: center; gap: 8px; }
+.wb-button { min-height: 36px; border: 1px solid var(--wb-border-strong); border-radius: 4px; padding: 7px 12px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; color: var(--wb-ink); background: var(--wb-surface); text-decoration: none; white-space: nowrap; cursor: pointer; }
+.wb-button:hover { border-color: #89979e; background: var(--wb-surface-muted); }
+.wb-button--primary { border-color: var(--wb-brand); color: #fff; background: var(--wb-brand); }
+.wb-button--primary:hover { border-color: var(--wb-brand-strong); background: var(--wb-brand-strong); }
+
+.wb-status-strip { margin-bottom: 20px; border: 1px solid var(--wb-border); border-radius: var(--wb-radius); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--wb-surface); }
+.wb-status-item { min-width: 0; padding: 13px 15px; border-right: 1px solid var(--wb-border); }
+.wb-status-item:last-child { border-right: 0; }
+.wb-status-item__label { color: var(--wb-muted); font-size: 11px; }
+.wb-status-item__value { margin-top: 4px; overflow-wrap: anywhere; font-weight: 690; }
+.wb-badge { min-height: 23px; border: 1px solid var(--wb-border); border-radius: 999px; padding: 2px 8px; display: inline-flex; align-items: center; gap: 6px; color: var(--wb-muted); background: var(--wb-surface-muted); font-size: 11px; font-weight: 680; }
+.wb-badge::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; content: ""; }
+.wb-badge--aligned { border-color: #b9dfca; color: var(--wb-success); background: var(--wb-success-soft); }
+.wb-badge--ahead { border-color: #eed39a; color: var(--wb-amber); background: var(--wb-amber-soft); }
+
+.wb-tabs { min-height: 42px; border-bottom: 1px solid var(--wb-border); display: flex; gap: 22px; overflow-x: auto; }
+.wb-tab { min-height: 42px; border: 0; border-bottom: 2px solid transparent; padding: 0 2px; color: var(--wb-muted); background: transparent; font-weight: 680; white-space: nowrap; cursor: pointer; }
+.wb-tab[aria-selected="true"] { border-bottom-color: var(--wb-brand); color: var(--wb-brand-strong); }
+.wb-tab-panel { display: none; padding-top: 20px; }
+.wb-tab-panel.is-active { display: block; }
+
+.wb-overview-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr); gap: 18px; }
+.wb-section { border: 1px solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); }
+.wb-section__head { min-height: 48px; border-bottom: 1px solid var(--wb-border); padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.wb-section__head h3 { margin: 0; font-size: 14px; }
+.wb-section__body { padding: 15px; }
+.wb-timeline { margin: 0; padding: 0; list-style: none; }
+.wb-timeline li { position: relative; min-height: 52px; padding: 0 0 18px 24px; }
+.wb-timeline li::before { position: absolute; top: 5px; left: 4px; width: 8px; height: 8px; border: 2px solid var(--wb-surface); border-radius: 50%; background: var(--wb-brand); box-shadow: 0 0 0 1px var(--wb-brand); content: ""; }
+.wb-timeline li::after { position: absolute; top: 16px; bottom: 0; left: 8px; width: 1px; background: var(--wb-border); content: ""; }
+.wb-timeline li:last-child::after { display: none; }
+.wb-timeline strong { display: inline-block; min-width: 48px; }
+.wb-timeline span { color: var(--wb-muted); font-size: 12px; }
+.wb-trace-summary { display: grid; gap: 12px; }
+.wb-trace-summary div { border-bottom: 1px solid #e8edef; padding-bottom: 11px; }
+.wb-trace-summary div:last-child { border-bottom: 0; padding-bottom: 0; }
+.wb-trace-summary dt { color: var(--wb-muted); font-size: 11px; }
+.wb-trace-summary dd { margin: 3px 0 0; overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+
+.wb-doc { margin: 0; border: 1px solid var(--wb-border); border-radius: var(--wb-radius); padding: 18px; overflow: auto; color: #243036; background: var(--wb-surface); font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.wb-trace-table-wrap { overflow-x: auto; border: 1px solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); }
+.wb-trace-table { width: 100%; min-width: 780px; border-collapse: collapse; table-layout: fixed; }
+.wb-trace-table th, .wb-trace-table td { border-bottom: 1px solid #e8edef; padding: 11px 13px; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.wb-trace-table th { color: var(--wb-muted); background: var(--wb-surface-muted); font-size: 11px; }
+.wb-trace-table tr:last-child td { border-bottom: 0; }
+.wb-id { color: var(--wb-blue); font: 680 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.wb-kind { text-transform: capitalize; }
+.wb-empty { min-height: 170px; padding: 30px; display: grid; place-items: center; color: var(--wb-muted); text-align: center; }
+
+@media (max-width: 960px) {
+  .wb-body { grid-template-columns: 1fr; }
+  .wb-sidebar { position: fixed; inset: var(--wb-header) auto 0 0; z-index: 20; width: min(var(--wb-sidebar), calc(100vw - 48px)); transform: translateX(-100%); transition: transform 160ms ease; box-shadow: 16px 0 28px rgba(23, 33, 38, 0.12); }
+  .wb-sidebar.is-open { transform: translateX(0); }
+  .wb-menu-button { display: grid; }
+}
+@media (max-width: 720px) {
+  .wb-topbar { height: auto; min-height: var(--wb-header); padding: 9px 12px; }
+  .wb-overall { display: none; }
+  .wb-summary__head, .wb-page__head { flex-direction: column; }
+  .wb-summary__release { width: 100%; }
+  .wb-stats, .wb-status-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wb-stat:nth-child(2), .wb-status-item:nth-child(2) { border-right: 0; }
+  .wb-stat:nth-child(-n+2), .wb-status-item:nth-child(-n+2) { border-bottom: 1px solid var(--wb-border); }
+  .wb-stat:first-child { padding-left: 16px; }
+  .wb-overview-grid { grid-template-columns: 1fr; }
+  .wb-actions { width: 100%; }
+  .wb-actions .wb-button { flex: 1; }
+}
+@media (max-width: 430px) {
+  .wb-stats, .wb-status-strip { grid-template-columns: 1fr; }
+  .wb-stat, .wb-status-item { border-right: 0; border-bottom: 1px solid var(--wb-border); }
+  .wb-stat:last-child, .wb-status-item:last-child { border-bottom: 0; }
+}
+</style></head><body><div class="wb-shell"><header class="wb-topbar"><div class="wb-brand"><button class="wb-menu-button" type="button" aria-label="打开导航" title="打开导航" aria-expanded="false">&#9776;</button><span class="wb-brand__mark" aria-hidden="true">VP</span><div class="wb-brand__copy"><span class="wb-brand__name">身份认证登录原型</span><span class="wb-brand__meta">版本化原型工作台</span></div></div><div class="wb-topbar__right"><span class="wb-overall">1 个页面中 1 个已对齐</span><span class="wb-badge wb-badge--aligned">可进入评审</span></div></header><div class="wb-body"><aside class="wb-sidebar" aria-label="模块与页面"><div class="wb-sidebar__heading"><span>原型页面</span><span class="wb-sidebar__count">1</span></div><section class="wb-module"><h2 class="wb-module__title">身份认证</h2><button class="wb-page-button" type="button" data-page-key="auth/login" aria-current="page"><span class="wb-page-button__name">账号登录</span><span class="wb-page-button__version">v1.0</span><span class="wb-page-button__state"><span class="wb-state-dot wb-state-dot--aligned"></span>已对齐 · p1</span></button></section></aside><main class="wb-main"><section class="wb-summary"><div class="wb-summary__head"><div><p class="wb-eyebrow">规格控制</p><h1>评审工作台</h1><p class="wb-summary__description">查看当前发布组成、原型对齐状态与证据链。</p></div><div class="wb-summary__release"><span>模块发布</span><strong>1 个模块中 1 个已发布</strong></div></div><div class="wb-stats"><div class="wb-stat"><div class="wb-stat__label">模块</div><div class="wb-stat__value">1</div></div><div class="wb-stat"><div class="wb-stat__label">页面</div><div class="wb-stat__value">1</div></div><div class="wb-stat"><div class="wb-stat__label">已对齐</div><div class="wb-stat__value">1</div></div><div class="wb-stat"><div class="wb-stat__label">证据 ID</div><div class="wb-stat__value">16</div></div></div></section><div class="wb-content"><section class="wb-page is-active" data-page-key="auth/login">
+    <header class="wb-page__head">
+      <div><h2>账号登录</h2><div class="wb-page__path">auth/login</div></div>
+      <div class="wb-actions"><button class="wb-button" type="button" data-download="auth-login-dev" data-filename="login-v1.0-dev.md">下载开发规格</button><a class="wb-button wb-button--primary" href="./auth/login.html">打开交互原型</a></div>
+    </header>
+    <div class="wb-status-strip">
+      <div class="wb-status-item"><div class="wb-status-item__label">规格版本</div><div class="wb-status-item__value">v1.0</div></div>
+      <div class="wb-status-item"><div class="wb-status-item__label">原型修订</div><div class="wb-status-item__value">p1</div></div>
+      <div class="wb-status-item"><div class="wb-status-item__label">对齐状态</div><div class="wb-status-item__value"><span class="wb-badge wb-badge--aligned">已对齐</span></div></div>
+      <div class="wb-status-item"><div class="wb-status-item__label">证据索引</div><div class="wb-status-item__value">16 个稳定 ID</div></div>
+    </div>
+    <div class="wb-tabs" role="tablist" aria-label="账号登录视图">
+      <button class="wb-tab" type="button" role="tab" aria-selected="true" data-tab="overview">概览</button>
+      <button class="wb-tab" type="button" role="tab" aria-selected="false" data-tab="development">开发规格</button>
+      <button class="wb-tab" type="button" role="tab" aria-selected="false" data-tab="testing">测试规格</button>
+      <button class="wb-tab" type="button" role="tab" aria-selected="false" data-tab="traceability">追溯矩阵</button>
+    </div>
+    <div class="wb-tab-panel is-active" data-panel="overview">
+      <div class="wb-overview-grid">
+        <section class="wb-section"><header class="wb-section__head"><h3>版本历史</h3><span class="wb-badge">已发布 1 个版本</span></header><div class="wb-section__body"><ol class="wb-timeline"><li><strong>v1.0</strong> <span>基线 · 初始基线</span></li></ol></div></section>
+        <section class="wb-section"><header class="wb-section__head"><h3>交付追踪</h3></header><div class="wb-section__body"><dl class="wb-trace-summary"><div><dt>基线提交</dt><dd>6d6adae6243f</dd></div><div><dt>实现提交</dt><dd>a64460c8ce5f</dd></div><div><dt>MR / PR</dt><dd>未关联</dd></div><div><dt>合并提交</dt><dd>未关联</dd></div></dl></div></section>
+      </div>
+    </div>
+    <div class="wb-tab-panel" data-panel="development"><pre class="wb-doc" id="auth-login-dev"># 账号登录 - 开发规格
+
+&gt; 当前完整有效规格。版本：v1.0
+
+## 1. 目标与范围
+
+为内部业务系统提供独立、可评审的账号登录页面。页面只模拟认证交互，不连接真实后端，不代表生产安全实现。
+
+## 2. 来源与基线
+
+| ID | 来源 | 结论 |
+| --- | --- | --- |
+| SRC-001 | `sources/login-page.md` | 本版本需求与验收的唯一输入。 |
+
+本页面是全新设计，没有可核验的既有页面或 As-Is 基线。
+
+## 3. 页面需求
+
+| ID | 需求 | 证据 | 原型定位 |
+| --- | --- | --- | --- |
+| REQ-001 | 显示产品名称、登录标题和安全环境提示；桌面与移动端均保持清晰层级。 | SRC-001 | `.login-brand`、`.login-panel` |
+| REQ-002 | 提供账号输入框并在页面打开时获得焦点。 | SRC-001 | `#username` |
+| REQ-003 | 提供密码输入框以及带可访问名称的密码显隐按钮。 | SRC-001 | `#password`、`#toggle-password` |
+| REQ-004 | 提供“记住账号”复选框和“忘记密码”入口，只保存账号、不保存密码。 | SRC-001 | `#remember`、`#forgot-password` |
+
+## 4. 交互与规则
+
+| ID | 类型 | 规则 | 失败行为 |
+| --- | --- | --- | --- |
+| INT-001 | 登录提交 | 点击登录或按 Enter 后进入提交中状态；按钮禁用且只处理一次；完成后恢复。 | 保留账号输入并显示明确错误。 |
+| INT-002 | 密码显隐 | 点击图标在 password/text 类型之间切换，更新按钮可访问名称，不移动焦点。 | 输入内容不得丢失。 |
+| INT-003 | 辅助操作 | 勾选记住账号后刷新仍回显账号；忘记密码只显示原型说明。 | 不发起外部请求，不保存密码。 |
+| RULE-001 | 必填校验 | 账号和密码均必填；错误信息与字段关联，首次错误字段获得焦点。 | 表单保持原值。 |
+| RULE-002 | 演示认证 | 仅 `demo-admin / Demo@123` 返回成功，其余组合返回“账号或密码错误”。 | 不泄露具体哪个字段不匹配。 |
+
+## 5. 状态
+
+- 初始：表单可编辑，登录按钮可用。
+- 校验失败：字段显示错误，页面提示区同步反馈。
+- 提交中：按钮显示“登录中”，全部提交入口禁用。
+- 认证失败：保留账号，清空密码并聚焦密码框。
+- 认证成功：显示“验证通过，正在进入演示工作区”，原型不真实跳转。
+
+## 6. 验收标准
+
+- [ ] TST-001 验证初始内容、焦点和键盘顺序。
+- [ ] TST-002 验证空账号与空密码的 RULE-001。
+- [ ] TST-003 验证错误凭据的 RULE-002。
+- [ ] TST-004 验证成功凭据和 INT-001 防重复提交。
+- [ ] TST-005 验证密码显隐、记住账号和忘记密码说明。
+- [ ] TST-006 验证 1280px 与 390px 布局无重叠和页面级横向滚动。
+
+## 7. 非目标
+
+不实现注册、验证码、单点登录、真实密码找回、真实网络请求、Token 存储或权限跳转。
+
+</pre></div>
+    <div class="wb-tab-panel" data-panel="testing"><div class="wb-actions" style="margin-bottom:12px"><button class="wb-button" type="button" data-download="auth-login-test" data-filename="login-v1.0-test.md">下载测试规格</button></div><pre class="wb-doc" id="auth-login-test"># 账号登录 - 测试规格
+
+&gt; 当前完整有效测试规格。版本：v1.0
+
+## 1. 前置条件
+
+使用当前浏览器打开构建后的 `dist/auth/login.html`。清除本页面 localStorage 后执行首轮测试。
+
+## 2. 核心用例
+
+| ID | 操作步骤 | 预期结果 | 关联需求 |
+| --- | --- | --- | --- |
+| TST-001 | 打开页面，连续按 Tab，并在密码框按 Enter。 | 初始焦点在账号；焦点顺序符合视觉顺序；Enter 可提交；产品与环境信息可见。 | REQ-001 / REQ-002 |
+| TST-002 | 分别提交全空、仅账号、仅密码三种组合。 | 对应字段显示必填错误；首次错误字段聚焦；已有输入不丢失。 | RULE-001 / INT-001 |
+| TST-003 | 输入 `demo-admin / wrong-password` 并提交。 | 显示“账号或密码错误”；账号保留，密码清空并聚焦。 | RULE-002 / INT-001 |
+| TST-004 | 输入 `demo-admin / Demo@123`，连续点击登录。 | 只进入一次提交过程；按钮显示登录中并禁用；随后显示成功反馈且不真实跳转。 | RULE-002 / INT-001 |
+| TST-005 | 切换密码显隐；勾选记住账号后刷新；点击忘记密码。 | 密码值不丢失；刷新后仅账号回显；忘记密码显示原型说明且无网络请求。 | REQ-003 / REQ-004 / INT-002 / INT-003 |
+| TST-006 | 分别以 1280px 和 390px 打开页面。 | 表单、品牌信息和操作无重叠；长文本不溢出；页面无横向滚动。 | REQ-001 |
+
+## 3. 回归检查
+
+- [ ] 浏览器控制台无未处理异常。
+- [ ] 登录成功和失败均不会产生真实网络请求。
+- [ ] 页面刷新后密码字段始终为空。
+- [ ] 颜色不是状态信息的唯一表达方式。
+
+</pre></div>
+    <div class="wb-tab-panel" data-panel="traceability"><div class="wb-trace-table-wrap"><table class="wb-trace-table"><thead><tr><th style="width:14%">ID</th><th style="width:12%">类型</th><th style="width:30%">摘要</th><th style="width:24%">关联 ID</th><th style="width:20%">原型定位</th></tr></thead><tbody><tr><td><span class="wb-id">SRC-001</span></td><td class="wb-kind">来源</td><td>账号登录页需求</td><td>-</td><td><code>-</code></td></tr><tr><td><span class="wb-id">REQ-001</span></td><td class="wb-kind">需求</td><td>显示产品身份、登录标题和响应式安全环境提示</td><td>SRC-001, TST-001, TST-006</td><td><code>.login-brand, .login-panel</code></td></tr><tr><td><span class="wb-id">REQ-002</span></td><td class="wb-kind">需求</td><td>提供账号输入框并在初始加载时聚焦</td><td>SRC-001, TST-001, TST-002</td><td><code>#username</code></td></tr><tr><td><span class="wb-id">REQ-003</span></td><td class="wb-kind">需求</td><td>提供密码输入和可访问的显隐控制</td><td>SRC-001, TST-005</td><td><code>#password, #toggle-password</code></td></tr><tr><td><span class="wb-id">REQ-004</span></td><td class="wb-kind">需求</td><td>提供记住账号与忘记密码辅助操作且不保存密码</td><td>SRC-001, TST-005</td><td><code>#remember, #forgot-password</code></td></tr><tr><td><span class="wb-id">INT-001</span></td><td class="wb-kind">交互</td><td>登录提交支持禁用、提交中、失败和成功状态并防重复</td><td>REQ-002, REQ-003, TST-002, TST-003, TST-004</td><td><code>#login-form, #submit-button, #notice</code></td></tr><tr><td><span class="wb-id">INT-002</span></td><td class="wb-kind">交互</td><td>密码显隐切换不丢失输入并更新可访问名称</td><td>REQ-003, TST-005</td><td><code>#toggle-password</code></td></tr><tr><td><span class="wb-id">INT-003</span></td><td class="wb-kind">交互</td><td>记住账号仅持久化账号，忘记密码不发起外部请求</td><td>REQ-004, TST-005</td><td><code>#remember, #forgot-password</code></td></tr><tr><td><span class="wb-id">RULE-001</span></td><td class="wb-kind">规则</td><td>账号和密码必填，错误与字段关联并聚焦首次错误</td><td>REQ-002, REQ-003, TST-002</td><td><code>-</code></td></tr><tr><td><span class="wb-id">RULE-002</span></td><td class="wb-kind">规则</td><td>仅演示凭据 demo-admin / Demo@123 返回成功</td><td>REQ-002, REQ-003, TST-003, TST-004</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-001</span></td><td class="wb-kind">测试</td><td>验证初始内容、焦点、键盘顺序和 Enter 提交</td><td>REQ-001, REQ-002</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-002</span></td><td class="wb-kind">测试</td><td>验证账号与密码必填校验</td><td>INT-001, RULE-001</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-003</span></td><td class="wb-kind">测试</td><td>验证错误凭据的通用错误反馈</td><td>INT-001, RULE-002</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-004</span></td><td class="wb-kind">测试</td><td>验证成功凭据、提交中状态和防重复</td><td>INT-001, RULE-002</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-005</span></td><td class="wb-kind">测试</td><td>验证密码显隐、记住账号和忘记密码</td><td>REQ-003, REQ-004, INT-002, INT-003</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-006</span></td><td class="wb-kind">测试</td><td>验证桌面与移动端布局</td><td>REQ-001</td><td><code>-</code></td></tr></tbody></table></div></div>
+  </section></div></main></div></div><script>(function () {
+  var sidebar = document.querySelector('.wb-sidebar');
+  var menuButton = document.querySelector('.wb-menu-button');
+  var pageButtons = Array.prototype.slice.call(document.querySelectorAll('.wb-page-button'));
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.wb-page'));
+
+  function activatePage(key, updateHash) {
+    var target = pages.find(function (item) { return item.dataset.pageKey === key; }) || pages[0];
+    if (!target) return;
+    pages.forEach(function (item) { item.classList.toggle('is-active', item === target); });
+    pageButtons.forEach(function (item) {
+      if (item.dataset.pageKey === target.dataset.pageKey) item.setAttribute('aria-current', 'page');
+      else item.removeAttribute('aria-current');
+    });
+    if (updateHash) history.replaceState(null, '', '#' + encodeURIComponent(target.dataset.pageKey));
+    if (sidebar) sidebar.classList.remove('is-open');
+  }
+
+  function activateTab(page, tabName) {
+    var tabs = Array.prototype.slice.call(page.querySelectorAll('.wb-tab'));
+    var panels = Array.prototype.slice.call(page.querySelectorAll('.wb-tab-panel'));
+    tabs.forEach(function (tab) { tab.setAttribute('aria-selected', String(tab.dataset.tab === tabName)); });
+    panels.forEach(function (panel) { panel.classList.toggle('is-active', panel.dataset.panel === tabName); });
+  }
+
+  pageButtons.forEach(function (button) {
+    button.addEventListener('click', function () { activatePage(button.dataset.pageKey, true); });
+  });
+  pages.forEach(function (item) {
+    item.querySelectorAll('.wb-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () { activateTab(item, tab.dataset.tab); });
+    });
+  });
+  document.querySelectorAll('[data-download]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var source = document.getElementById(button.dataset.download);
+      if (!source) return;
+      var blob = new Blob([source.textContent], { type: 'text/markdown;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = button.dataset.filename || 'specification.md';
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    });
+  });
+  if (menuButton) menuButton.addEventListener('click', function () {
+    var open = sidebar.classList.toggle('is-open');
+    menuButton.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && sidebar) sidebar.classList.remove('is-open');
+  });
+
+  var requested = decodeURIComponent(location.hash.slice(1));
+  activatePage(requested || (pages[0] && pages[0].dataset.pageKey), false);
+}());
+</script></body></html>
