@@ -3,50 +3,70 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>账号登录</title>
+  <title>账号登录 · 北辰工作台</title>
   <link data-proto-bundle="style" href="../../../../../shared/design-system.css">
-  <link data-proto-bundle="style" href="../../../../../shared/shell.css">
   <link data-proto-bundle="style" href="./page.css">
 </head>
 <body>
-  <div class="prototype-app">
-    <header class="app-bar">
-      <div class="app-brand"><span class="app-brand__mark" aria-hidden="true">VP</span><span class="app-brand__name">账号登录</span></div>
-      <div class="app-context"><span class="vpw-badge vpw-badge--info">评审原型</span><span>login</span></div>
-    </header>
-    <div class="app-layout">
-      <nav class="app-nav" aria-label="原型导航">
-        <p class="app-nav__label">工作区</p>
-        <button class="app-nav__item" aria-current="page" type="button"><span class="app-nav__dot" aria-hidden="true"></span>业务记录</button>
-      </nav>
-      <main class="workspace">
-        <div class="breadcrumbs">工作区 / 账号登录</div>
-        <header class="page-heading">
-          <div><h1>账号登录</h1><p>查看当前业务记录与评审状态。</p></div>
-          <div class="page-actions"><button id="secondary-action" class="vpw-button" type="button">导出 CSV</button><button id="primary-action" class="vpw-button vpw-button--primary" type="button">执行操作</button></div>
+  <main class="login-shell">
+    <section class="login-brand" aria-labelledby="brand-title">
+      <div class="brand-lockup">
+        <span class="brand-mark" aria-hidden="true">B</span>
+        <span class="brand-name">北辰工作台</span>
+      </div>
+      <div class="brand-message">
+        <p class="brand-kicker">组织业务入口</p>
+        <h1 id="brand-title">任务、数据与流程统一访问</h1>
+        <p>仅限已授权的组织成员登录，操作记录将按账号留痕。</p>
+      </div>
+      <div class="brand-status"><span class="status-dot" aria-hidden="true"></span>演示环境运行正常</div>
+    </section>
+
+    <section class="login-main">
+      <div class="login-panel">
+        <header class="login-heading">
+          <span class="environment-badge">演示环境</span>
+          <h2>登录账号</h2>
+          <p>使用组织账号进入工作台</p>
         </header>
-        <section class="metrics" aria-label="汇总信息">
-          <div class="metric"><div class="metric__label">记录总数</div><div class="metric__value" id="metric-total">0</div></div>
-          <div class="metric"><div class="metric__label">可处理</div><div class="metric__value" id="metric-ready">0</div></div>
-          <div class="metric"><div class="metric__label">已阻塞</div><div class="metric__value" id="metric-blocked">0</div></div>
-        </section>
-        <div id="notice" class="notice" role="status">原型已准备好，可以开始评审。</div>
-        <section aria-labelledby="records-heading">
-          <h2 id="records-heading" class="section-title">业务记录</h2>
-          <div class="toolbar">
-            <label class="vpw-field"><span class="vpw-label">搜索</span><input id="search" class="vpw-input" type="search" placeholder="按记录编号搜索"></label>
-            <label class="vpw-field"><span class="vpw-label">状态</span><select id="status-filter" class="vpw-select"><option value="">全部状态</option><option value="Ready">可处理</option><option value="Blocked">已阻塞</option></select></label>
-            <button id="reset-filters" class="vpw-button" type="button">重置</button>
+
+        <div id="notice" class="form-notice" role="status" aria-live="polite" hidden></div>
+
+        <form id="login-form" novalidate>
+          <div class="field-group">
+            <label for="username">账号</label>
+            <input id="username" name="username" type="text" autocomplete="username" placeholder="请输入账号" aria-describedby="username-error">
+            <p id="username-error" class="field-error"></p>
           </div>
-          <div class="vpw-table-wrap">
-            <table class="vpw-table"><thead><tr><th style="width:42%">记录</th><th style="width:28%">状态</th><th style="width:30%">金额</th></tr></thead><tbody id="rows"></tbody></table>
-            <div id="empty-state" class="vpw-empty" hidden>没有符合当前筛选条件的记录。</div>
+
+          <div class="field-group">
+            <label for="password">密码</label>
+            <div class="password-control">
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="请输入密码" aria-describedby="password-error">
+              <button id="toggle-password" class="password-toggle" type="button" aria-label="显示密码" title="显示密码">显示</button>
+            </div>
+            <p id="password-error" class="field-error"></p>
           </div>
-        </section>
-      </main>
-    </div>
-  </div>
-  <script data-proto-bundle src="../../../../../shared/shell.js"></script>
+
+          <div class="form-options">
+            <label class="remember-option"><input id="remember" type="checkbox">记住账号</label>
+            <button id="forgot-password" class="text-button" type="button">忘记密码</button>
+          </div>
+
+          <button id="submit-button" class="submit-button" type="submit">
+            <span class="button-label">登录</span>
+            <span class="button-spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+
+        <footer class="login-footer">
+          <span>受保护的组织入口</span>
+          <span>原型版本 v1.0</span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
   <script data-proto-bundle src="./fixtures.js"></script>
   <script data-proto-bundle src="./page.js"></script>
 </body>

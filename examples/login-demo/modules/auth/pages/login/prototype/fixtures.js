@@ -1,5 +1,7 @@
-window.PAGE_FIXTURES = [
-  { id: 'login-001', status: 'Ready', amount: 120, owner: '评审组' },
-  { id: 'login-002', status: 'Blocked', amount: 0, owner: '运营组' },
-  { id: 'login-003', status: 'Ready', amount: 86, owner: '评审组' }
-];
+window.LOGIN_PROTOTYPE_CONFIG = {
+  username: 'demo-admin',
+  password: 'Demo@123',
+  storageKey: 'vpw-login-demo-username',
+  workspaceName: '北辰演示工作区',
+  delayMs: 550
+};
