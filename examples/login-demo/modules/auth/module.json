@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 2,
+  "id": "auth",
+  "title": "身份认证",
+  "currentRelease": null,
+  "pages": [
+    "login"
+  ]
+}
