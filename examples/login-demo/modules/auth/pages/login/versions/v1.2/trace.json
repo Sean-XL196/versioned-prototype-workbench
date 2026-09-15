@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 2,
+  "version": "v1.2",
+  "repository": {
+    "baselineCommit": "f720192a941c61310bcc04b293bf5604460e714d",
+    "implementationCommit": null
+  },
+  "changeRequest": {
+    "kind": null,
+    "id": null,
+    "url": null,
+    "headCommit": null,
+    "mergeCommit": null
+  },
+  "updatedAt": "2026-09-15T10:11:57.591Z"
+}

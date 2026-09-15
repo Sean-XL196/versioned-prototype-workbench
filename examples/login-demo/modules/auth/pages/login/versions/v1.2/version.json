@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 2,
+  "id": "v1.2",
+  "parent": "v1.1",
+  "kind": "change",
+  "mode": "docs-only",
+  "status": "released",
+  "source": "工作台默认展示本版变更并可切换完整规格",
+  "createdAt": "2026-09-15T10:11:57.579Z",
+  "publishedAt": "2026-09-15T10:14:16.448Z",
+  "files": {
+    "changeDev": "change-dev.md",
+    "changeTest": "change-test.md",
+    "snapshotDev": "snapshot-dev.md",
+    "snapshotTest": "snapshot-test.md",
+    "evidence": "evidence.json",
+    "trace": "trace.json"
+  },
+  "hashes": {
+    "change-dev.md": "aee435982c03ec4a55338564a13979fc80c1024816bbb9f674fcb03bb64c34e4",
+    "change-test.md": "dbd93431bd2d781515fb432713c6a41e0b01e9c75d5c55ff558e44a1781cb7e4",
+    "snapshot-dev.md": "aaf43d8c12884c6713a6e8b7725d7dec18260209157631aa8942bb09048884d4",
+    "snapshot-test.md": "e98708ece1c5aed43b1356e363146c7ba7d34b37a9e9918a2d77b80fe38323c9",
+    "evidence.json": "3f89262add47702c1f2c6b282e30d4d1f6d30884164645d145b0a8ccdeb011ed"
+  }
+}
