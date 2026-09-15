@@ -112,7 +112,7 @@ try {
   run(['release', 'sales', '--root', project, '--allow-docs-ahead']);
   fs.appendFileSync(path.join(ordersRoot, 'prototype', 'page.css'), '\n.priority { color: var(--vpw-color-info); }\n');
   const implementationCommit = commit('feat: show order priority');
-  run(['link-commit', 'sales/orders', '--root', project, '--role', 'implementation', '--commit', implementationCommit]);
+  run(['link-commit', 'sales/orders', '--root', project, '--role', 'implementation', '--commit', implementationCommit, '--version', 'v1.1']);
   run(['link-commit', 'sales/orders', '--root', project, '--role', 'mr-head', '--commit', implementationCommit, '--mr-kind', 'mr', '--mr-id', '123', '--mr-url', 'https://git.example.test/mr/123']);
   run(['align', 'sales/orders', '--root', project, '--evidence', 'CHG-001,REQ-002', '--note', 'Priority interaction verified']);
   const trace = json(path.join(draftRoot, 'trace.json'));

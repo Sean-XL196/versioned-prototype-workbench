@@ -1092,8 +1092,9 @@ function help() {
 async function main() {
   const { positional, options } = parseArgs(process.argv.slice(2));
   const command = positional.shift();
+  if (!command && options.version === true) { console.log(VERSION); return; }
   if (!command || command === 'help' || options.help) { help(); return; }
-  if (command === 'version' || options.version) { console.log(VERSION); return; }
+  if (command === 'version') { console.log(VERSION); return; }
   const commands = {
     init: cmdInit,
     'add-module': cmdAddModule,
