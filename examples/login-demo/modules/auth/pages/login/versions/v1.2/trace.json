@@ -3,14 +3,14 @@
   "version": "v1.2",
   "repository": {
     "baselineCommit": "f720192a941c61310bcc04b293bf5604460e714d",
-    "implementationCommit": null
+    "implementationCommit": "57f778d1e483c8d2336480b206e33c3a69d8e1ae"
   },
   "changeRequest": {
-    "kind": null,
-    "id": null,
-    "url": null,
-    "headCommit": null,
+    "kind": "pr",
+    "id": "1",
+    "url": "https://github.com/Sean-XL196/versioned-prototype-workbench/pull/1",
+    "headCommit": "57f778d1e483c8d2336480b206e33c3a69d8e1ae",
     "mergeCommit": null
   },
-  "updatedAt": "2026-09-15T10:11:57.591Z"
+  "updatedAt": "2026-09-15T10:17:30.732Z"
 }

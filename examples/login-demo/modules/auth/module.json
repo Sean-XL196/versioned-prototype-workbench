@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "auth",
   "title": "身份认证",
-  "currentRelease": "auth-r2",
+  "currentRelease": "auth-r3",
   "pages": [
     "login"
   ]
