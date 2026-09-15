@@ -51,6 +51,7 @@ try {
   git(['init']);
   git(['config', 'user.email', 'vpw@example.test']);
   git(['config', 'user.name', 'VPW Test']);
+  git(['remote', 'add', 'origin', 'git@github.com:example/vpw-test.git']);
   write(path.join(repo, 'README.md'), '# Test repository\n');
   const seedCommit = commit('chore: seed repository');
 
@@ -118,6 +119,14 @@ try {
   assert.equal(trace.repository.implementationCommit, implementationCommit);
   assert.equal(trace.changeRequest.id, '123');
   run(['release', 'sales', '--root', project]);
+  run(['build', 'all', '--root', project]);
+  const workbench = fs.readFileSync(path.join(project, 'dist', 'index.html'), 'utf8');
+  assert.match(workbench, /class="wb-version-select"/);
+  assert.match(workbench, /data-version="v1\.0"/);
+  assert.match(workbench, /data-version="v1\.1"/);
+  assert.match(workbench, /Show priority/);
+  assert.ok(workbench.includes(`https://github.com/example/vpw-test/compare/${baselineImplementation}...${implementationCommit}`));
+  assert.ok(workbench.includes('https://git.example.test/mr/123'));
 
   const sharedCss = path.join(project, 'shared', 'shell.css');
   const originalSharedCss = fs.readFileSync(sharedCss, 'utf8');

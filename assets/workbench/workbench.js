@@ -23,12 +23,32 @@
     panels.forEach(function (panel) { panel.classList.toggle('is-active', panel.dataset.panel === tabName); });
   }
 
+  function activateVersion(select) {
+    var panel = select.closest('.wb-tab-panel');
+    if (!panel) return;
+    var selected = null;
+    panel.querySelectorAll('.wb-version-view').forEach(function (view) {
+      var active = view.dataset.version === select.value;
+      view.hidden = !active;
+      if (active) selected = view;
+    });
+    var download = panel.querySelector('[data-download-selected]');
+    if (download && selected) {
+      download.dataset.download = selected.dataset.docId;
+      download.dataset.filename = selected.dataset.filename;
+    }
+  }
+
   pageButtons.forEach(function (button) {
     button.addEventListener('click', function () { activatePage(button.dataset.pageKey, true); });
   });
   pages.forEach(function (item) {
     item.querySelectorAll('.wb-tab').forEach(function (tab) {
       tab.addEventListener('click', function () { activateTab(item, tab.dataset.tab); });
+    });
+    item.querySelectorAll('.wb-version-select').forEach(function (select) {
+      select.addEventListener('change', function () { activateVersion(select); });
+      activateVersion(select);
     });
   });
   document.querySelectorAll('[data-download]').forEach(function (button) {

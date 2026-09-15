@@ -78,6 +78,12 @@ A module release is a lockfile, not a shared page version. It records for every 
 
 Normal releases reject `docs-ahead` pages. Use an explicit override only when the release is intentionally specification-only.
 
+## Review Workbench
+
+`build` embeds every released `snapshot-dev.md` and its `trace.json` for each page into `dist/index.html`. The version selector defaults to `current.released`; changing it updates the visible Markdown, download target, Git commits, MR/PR state, and fixed commit-range Diff together. Drafts and released versions outside the current parent chain are not shown.
+
+The workbench remains a standalone file. Version switching must not fetch Markdown over HTTP. A Diff link is derived from the configured repository remote plus that version's `baselineCommit...implementationCommit`; an MR/PR link comes only from the same version's trace and missing data stays visibly unassociated.
+
 ## Context Policy
 
 For `docs`, load manifests, capsules, current pointer, released snapshot, current evidence/trace, and draft delta/snapshot when present.

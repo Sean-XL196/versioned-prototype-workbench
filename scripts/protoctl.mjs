@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const VERSION = '2.0.0';
+const VERSION = '2.1.0';
 const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const VERSION_RE = /^v(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 const EVIDENCE_ID_RE = /^(SRC|ASIS|CHG|REQ|INT|RULE|TST|ALN)-[0-9]{3,}$/;
@@ -726,6 +726,23 @@ function shortCommit(value) {
   return value ? String(value).slice(0, 12) : '未关联';
 }
 
+function repositoryWebUrl(remote) {
+  const value = String(remote || '').trim().replace(/\.git$/, '');
+  let match = /^git@([^:]+):(.+)$/.exec(value);
+  if (match) return `https://${match[1]}/${match[2]}`;
+  match = /^ssh:\/\/(?:[^@]+@)?([^/]+)\/(.+)$/.exec(value);
+  if (match) return `https://${match[1]}/${match[2]}`;
+  if (/^https?:\/\//.test(value)) return value;
+  return null;
+}
+
+function versionDiffUrl(project, trace) {
+  const webUrl = repositoryWebUrl(project.repository?.remote);
+  const base = trace.repository?.baselineCommit;
+  const head = trace.repository?.implementationCommit;
+  return webUrl && base && head ? `${webUrl}/compare/${base}...${head}` : null;
+}
+
 function statusLabel(status) {
   return ({ aligned: '已对齐', 'docs-ahead': '文档领先', draft: '草稿' })[status] || status;
 }
@@ -756,11 +773,11 @@ function renderTraceRows(evidence) {
 }
 
 function renderPageWorkspace(root, moduleId, pageId, first) {
+  const project = ensureProject(root);
   const page = ensurePage(root, moduleId, pageId);
   const current = readJson(currentFile(root, moduleId, pageId));
   const key = `${moduleId}/${pageId}`;
   const releasedDir = current.released ? versionDir(root, moduleId, pageId, current.released) : null;
-  const dev = releasedDir ? fs.readFileSync(path.join(releasedDir, 'snapshot-dev.md'), 'utf8') : '暂无已发布的开发规格。';
   const test = releasedDir ? fs.readFileSync(path.join(releasedDir, 'snapshot-test.md'), 'utf8') : '暂无已发布的测试规格。';
   const evidence = releasedDir ? readJson(path.join(releasedDir, 'evidence.json')) : { entries: {} };
   const trace = releasedDir ? readJson(path.join(releasedDir, 'trace.json')) : { repository: null, changeRequest: {} };
@@ -769,10 +786,35 @@ function renderPageWorkspace(root, moduleId, pageId, first) {
   const statusClass = page.prototype.status === 'aligned' ? 'wb-badge--aligned' : 'wb-badge--ahead';
   const traceCount = Object.keys(evidence.entries || {}).length;
   const safeKey = key.replace(/[^a-z0-9]+/gi, '-');
+  const versionOptions = chain.map((version) => `<option value="${esc(version.id)}"${version.id === current.released ? ' selected' : ''}>${esc(version.id)} · ${esc(kindLabel(version.kind))}</option>`).join('');
+  const versionViews = chain.map((version) => {
+    const dir = versionDir(root, moduleId, pageId, version.id);
+    const versionDev = fs.readFileSync(path.join(dir, 'snapshot-dev.md'), 'utf8');
+    const versionTrace = readJson(path.join(dir, 'trace.json'));
+    const versionKey = version.id.replace(/[^a-z0-9]+/gi, '-');
+    const docId = `${safeKey}-dev-${versionKey}`;
+    const mrUrl = versionTrace.changeRequest?.url;
+    const diffUrl = versionDiffUrl(project, versionTrace);
+    const mr = mrUrl
+      ? `<a class="wb-version-link" href="${esc(mrUrl)}" target="_blank" rel="noopener">查看 ${esc((versionTrace.changeRequest.kind || 'MR').toUpperCase())} ${esc(versionTrace.changeRequest.id || '')}</a>`
+      : '<span class="wb-version-empty">未关联 MR</span>';
+    const diff = diffUrl
+      ? `<a class="wb-version-link wb-version-diff" href="${esc(diffUrl)}" target="_blank" rel="noopener">查看本版 Diff</a>`
+      : '<span class="wb-version-empty">待关联实现提交后生成 Diff</span>';
+    return `<section class="wb-version-view" data-version="${esc(version.id)}" data-doc-id="${esc(docId)}" data-filename="${esc(pageId)}-${esc(version.id)}-dev.md"${version.id === current.released ? '' : ' hidden'}>
+      <div class="wb-version-trace" aria-label="${esc(version.id)} 版本追溯">
+        <div><span>基线提交</span><code>${esc(shortCommit(versionTrace.repository?.baselineCommit))}</code></div>
+        <div><span>实现提交</span><code>${esc(shortCommit(versionTrace.repository?.implementationCommit))}</code></div>
+        <div><span>MR / PR</span>${mr}</div>
+        <div><span>版本差异</span>${diff}</div>
+      </div>
+      <pre class="wb-doc" id="${esc(docId)}">${esc(versionDev)}</pre>
+    </section>`;
+  }).join('');
   return `<section class="wb-page${first ? ' is-active' : ''}" data-page-key="${esc(key)}">
     <header class="wb-page__head">
       <div><h2>${esc(page.title)}</h2><div class="wb-page__path">${esc(key)}</div></div>
-      <div class="wb-actions"><button class="wb-button" type="button" data-download="${safeKey}-dev" data-filename="${esc(pageId)}-${esc(current.released || 'draft')}-dev.md">下载开发规格</button><a class="wb-button wb-button--primary" href="./${esc(moduleId)}/${esc(pageId)}.html">打开交互原型</a></div>
+      <div class="wb-actions"><a class="wb-button wb-button--primary" href="./${esc(moduleId)}/${esc(pageId)}.html">打开交互原型</a></div>
     </header>
     <div class="wb-status-strip">
       <div class="wb-status-item"><div class="wb-status-item__label">规格版本</div><div class="wb-status-item__value">${esc(current.released || '仅有草稿')}</div></div>
@@ -792,7 +834,13 @@ function renderPageWorkspace(root, moduleId, pageId, first) {
         <section class="wb-section"><header class="wb-section__head"><h3>交付追踪</h3></header><div class="wb-section__body"><dl class="wb-trace-summary"><div><dt>基线提交</dt><dd>${esc(shortCommit(trace.repository?.baselineCommit))}</dd></div><div><dt>实现提交</dt><dd>${esc(shortCommit(trace.repository?.implementationCommit))}</dd></div><div><dt>MR / PR</dt><dd>${esc(trace.changeRequest?.id || '未关联')}</dd></div><div><dt>合并提交</dt><dd>${esc(shortCommit(trace.changeRequest?.mergeCommit))}</dd></div></dl></div></section>
       </div>
     </div>
-    <div class="wb-tab-panel" data-panel="development"><pre class="wb-doc" id="${safeKey}-dev">${esc(dev)}</pre></div>
+    <div class="wb-tab-panel" data-panel="development">
+      <div class="wb-doc-toolbar">
+        <label class="wb-version-field"><span>开发文档版本</span><select class="wb-version-select" aria-label="${esc(page.title)}开发文档版本">${versionOptions}</select></label>
+        <button class="wb-button" type="button" data-download="${safeKey}-dev-${String(current.released || '').replace(/[^a-z0-9]+/gi, '-')}" data-download-selected data-filename="${esc(pageId)}-${esc(current.released || 'draft')}-dev.md">下载所选开发规格</button>
+      </div>
+      ${versionViews || '<div class="wb-empty">暂无已发布的开发规格。</div>'}
+    </div>
     <div class="wb-tab-panel" data-panel="testing"><div class="wb-actions" style="margin-bottom:12px"><button class="wb-button" type="button" data-download="${safeKey}-test" data-filename="${esc(pageId)}-${esc(current.released || 'draft')}-test.md">下载测试规格</button></div><pre class="wb-doc" id="${safeKey}-test">${esc(test)}</pre></div>
     <div class="wb-tab-panel" data-panel="traceability"><div class="wb-trace-table-wrap"><table class="wb-trace-table"><thead><tr><th style="width:14%">ID</th><th style="width:12%">类型</th><th style="width:30%">摘要</th><th style="width:24%">关联 ID</th><th style="width:20%">原型定位</th></tr></thead><tbody>${renderTraceRows(evidence)}</tbody></table></div></div>
   </section>`;
