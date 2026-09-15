@@ -6,6 +6,8 @@
   var remember = document.getElementById('remember');
   var submitButton = document.getElementById('submit-button');
   var togglePassword = document.getElementById('toggle-password');
+  var environmentToggle = document.getElementById('environment-toggle');
+  var environmentDetails = document.getElementById('environment-details');
   var notice = document.getElementById('notice');
   var submitting = false;
 
@@ -70,6 +72,12 @@
     togglePassword.setAttribute('aria-label', visible ? '显示密码' : '隐藏密码');
     togglePassword.title = visible ? '显示密码' : '隐藏密码';
     password.focus();
+  });
+
+  environmentToggle.addEventListener('click', function () {
+    var expanded = environmentToggle.getAttribute('aria-expanded') === 'true';
+    environmentToggle.setAttribute('aria-expanded', String(!expanded));
+    environmentDetails.hidden = expanded;
   });
 
   document.getElementById('forgot-password').addEventListener('click', function () {

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 2,
+  "id": "v1.3",
+  "parent": "v1.2",
+  "kind": "change",
+  "mode": "spec-and-prototype",
+  "status": "released",
+  "source": "登录工作台品牌、左侧区域交互与蓝色主题优化",
+  "createdAt": "2026-09-15T10:52:44.031Z",
+  "publishedAt": "2026-09-15T11:02:52.474Z",
+  "files": {
+    "changeDev": "change-dev.md",
+    "changeTest": "change-test.md",
+    "snapshotDev": "snapshot-dev.md",
+    "snapshotTest": "snapshot-test.md",
+    "evidence": "evidence.json",
+    "trace": "trace.json"
+  },
+  "hashes": {
+    "change-dev.md": "fc490aff5f6862a38f2df8ccf3cf0f10a63788f45905c677394f7c81197fa192",
+    "change-test.md": "42e5f70996f2309db4bd8a0a8e5afa207757f75eab06685fbeb6cbdc292fb915",
+    "snapshot-dev.md": "1219127b1e789a0a7d9e3e7a4897a19e17a327c7437fd20805ac9a9c7cc7a0af",
+    "snapshot-test.md": "6922df00bf8d41d6c23a339b7aea5e1811c903f0032040b4f130ad51af5035fd",
+    "evidence.json": "b7326bd267919d956c5cf214f85b7ba5630d24962489f69634efbd3ecf6c69e4"
+  }
+}

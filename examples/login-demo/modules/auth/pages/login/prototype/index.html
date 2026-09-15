@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>账号登录 · 北辰工作台</title>
+  <title>账号登录 · 测试工作台</title>
   <link data-proto-bundle="style" href="../../../../../shared/design-system.css">
   <link data-proto-bundle="style" href="./page.css">
 </head>
@@ -11,21 +11,37 @@
   <main class="login-shell">
     <section class="login-brand" aria-labelledby="brand-title">
       <div class="brand-lockup">
-        <span class="brand-mark" aria-hidden="true">B</span>
-        <span class="brand-name">北辰工作台</span>
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span class="brand-name">测试工作台</span>
       </div>
       <div class="brand-message">
-        <p class="brand-kicker">组织业务入口</p>
-        <h1 id="brand-title">任务、数据与流程统一访问</h1>
-        <p>仅限已授权的组织成员登录，操作记录将按账号留痕。</p>
+        <p class="brand-kicker">测试环境 · AUTH CENTER</p>
+        <h1 id="brand-title">让每次验证都有清晰上下文</h1>
+        <p>为评审与联调提供稳定、可回溯的账号入口，操作记录将按账号留痕。</p>
+        <ul class="brand-highlights" aria-label="测试工作台能力">
+          <li><span class="highlight-index">01</span><span>多环境验证</span></li>
+          <li><span class="highlight-index">02</span><span>账号状态可见</span></li>
+          <li><span class="highlight-index">03</span><span>操作记录留痕</span></li>
+        </ul>
+        <button id="environment-toggle" class="environment-toggle" type="button" aria-expanded="false" aria-controls="environment-details">
+          <span>查看测试环境信息</span>
+          <span class="environment-toggle-icon" aria-hidden="true"></span>
+        </button>
+        <div id="environment-details" class="environment-details" hidden>
+          <dl>
+            <div><dt>当前环境</dt><dd>演示环境</dd></div>
+            <div><dt>认证方式</dt><dd>模拟账号校验</dd></div>
+            <div><dt>数据范围</dt><dd>仅用于原型评审</dd></div>
+          </dl>
+        </div>
       </div>
-      <div class="brand-status"><span class="status-dot" aria-hidden="true"></span>演示环境运行正常</div>
+      <div class="brand-status"><span class="status-dot" aria-hidden="true"></span><span>演示环境运行正常</span><span class="brand-status-separator" aria-hidden="true">·</span><span>无外部请求</span></div>
     </section>
 
     <section class="login-main">
       <div class="login-panel">
         <header class="login-heading">
-          <span class="environment-badge">演示环境</span>
+          <span class="environment-badge">测试环境</span>
           <h2>登录账号</h2>
           <p>使用组织账号进入工作台</p>
         </header>
@@ -61,7 +77,7 @@
 
         <footer class="login-footer">
           <span>受保护的组织入口</span>
-          <span>原型版本 v1.0</span>
+          <span>原型版本 v1.3</span>
         </footer>
       </div>
     </section>
