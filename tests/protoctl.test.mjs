@@ -122,9 +122,15 @@ try {
   run(['build', 'all', '--root', project]);
   const workbench = fs.readFileSync(path.join(project, 'dist', 'index.html'), 'utf8');
   assert.match(workbench, /class="wb-version-select"/);
+  assert.match(workbench, /class="wb-document-mode"/);
+  assert.match(workbench, /aria-pressed="true" data-document-mode="change"/);
+  assert.match(workbench, /data-document-mode="snapshot"/);
   assert.match(workbench, /data-version="v1\.0"/);
   assert.match(workbench, /data-version="v1\.1"/);
+  assert.match(workbench, /# Orders change v1\.1/);
   assert.match(workbench, /Show priority/);
+  assert.ok(workbench.includes('orders-v1.1-change-dev.md'));
+  assert.ok(workbench.includes('orders-v1.1-snapshot-dev.md'));
   assert.ok(workbench.includes(`https://github.com/example/vpw-test/compare/${baselineImplementation}...${implementationCommit}`));
   assert.ok(workbench.includes('https://git.example.test/mr/123'));
 

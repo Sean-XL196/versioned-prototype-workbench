@@ -46,7 +46,7 @@ Do not scan sibling page HTML or historical versions unless the request requires
 - Prototype changes never outrun documentation: each revision records the exact released specification and evidence IDs it implements.
 - Git-backed projects distinguish the inspected baseline commit, implementation commit, MR/PR head, and merge commit.
 - A module release pins each page's specification and prototype revision; it never means all pages share one version.
-- The generated workbench embeds every released development snapshot for each page. Reviewers can switch versions, preview and download the selected Markdown, and inspect that version's Git/MR/Diff scope without a server.
+- The generated workbench embeds every released development delta and complete snapshot for each page. It defaults to the selected version's delta for review, lets users switch to the complete effective specification for implementation, and keeps preview, download, and Git/MR/Diff scope synchronized without a server.
 - The default working context is project manifest + module capsule + page capsule + current snapshot + relevant page source.
 - Historical deltas are loaded only for comparison, provenance, migration, or audit.
 
@@ -81,7 +81,7 @@ node <skill-dir>/scripts/protoctl.mjs build <module>/<page> --root <project-root
 
 For interactive changes, also verify the built HTML at desktop and mobile widths. Report the released spec ID, cited evidence IDs, prototype revision/alignment state, baseline and implementation commits when configured, output HTML path, and commands actually run.
 
-When a page has multiple released versions, verify that the workbench defaults to `current.released`, switches preview and download together, keeps missing MR data explicit, and builds a fixed commit-range Diff only when both baseline and implementation commits exist.
+When a page has multiple released versions, verify that the workbench defaults to `current.released` and its “本版变更” view. Switching version or document view must keep preview, download label, filename, and content synchronized; switching versions preserves the selected document view. Missing MR data stays explicit, and a fixed commit-range Diff appears only when both baseline and implementation commits exist.
 
 For a complete Chinese manual test checklist, read [references/testing-workbench.md](references/testing-workbench.md).
 

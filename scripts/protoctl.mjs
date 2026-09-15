@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const VERSION = '2.1.0';
+const VERSION = '2.2.0';
 const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const VERSION_RE = /^v(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 const EVIDENCE_ID_RE = /^(SRC|ASIS|CHG|REQ|INT|RULE|TST|ALN)-[0-9]{3,}$/;
@@ -789,10 +789,12 @@ function renderPageWorkspace(root, moduleId, pageId, first) {
   const versionOptions = chain.map((version) => `<option value="${esc(version.id)}"${version.id === current.released ? ' selected' : ''}>${esc(version.id)} · ${esc(kindLabel(version.kind))}</option>`).join('');
   const versionViews = chain.map((version) => {
     const dir = versionDir(root, moduleId, pageId, version.id);
-    const versionDev = fs.readFileSync(path.join(dir, 'snapshot-dev.md'), 'utf8');
+    const versionChange = fs.readFileSync(path.join(dir, 'change-dev.md'), 'utf8');
+    const versionSnapshot = fs.readFileSync(path.join(dir, 'snapshot-dev.md'), 'utf8');
     const versionTrace = readJson(path.join(dir, 'trace.json'));
     const versionKey = version.id.replace(/[^a-z0-9]+/gi, '-');
-    const docId = `${safeKey}-dev-${versionKey}`;
+    const changeDocId = `${safeKey}-dev-${versionKey}-change`;
+    const snapshotDocId = `${safeKey}-dev-${versionKey}-snapshot`;
     const mrUrl = versionTrace.changeRequest?.url;
     const diffUrl = versionDiffUrl(project, versionTrace);
     const mr = mrUrl
@@ -801,14 +803,15 @@ function renderPageWorkspace(root, moduleId, pageId, first) {
     const diff = diffUrl
       ? `<a class="wb-version-link wb-version-diff" href="${esc(diffUrl)}" target="_blank" rel="noopener">查看本版 Diff</a>`
       : '<span class="wb-version-empty">待关联实现提交后生成 Diff</span>';
-    return `<section class="wb-version-view" data-version="${esc(version.id)}" data-doc-id="${esc(docId)}" data-filename="${esc(pageId)}-${esc(version.id)}-dev.md"${version.id === current.released ? '' : ' hidden'}>
+    return `<section class="wb-version-view" data-version="${esc(version.id)}"${version.id === current.released ? '' : ' hidden'}>
       <div class="wb-version-trace" aria-label="${esc(version.id)} 版本追溯">
         <div><span>基线提交</span><code>${esc(shortCommit(versionTrace.repository?.baselineCommit))}</code></div>
         <div><span>实现提交</span><code>${esc(shortCommit(versionTrace.repository?.implementationCommit))}</code></div>
         <div><span>MR / PR</span>${mr}</div>
         <div><span>版本差异</span>${diff}</div>
       </div>
-      <pre class="wb-doc" id="${esc(docId)}">${esc(versionDev)}</pre>
+      <pre class="wb-doc wb-document" id="${esc(changeDocId)}" data-document-mode="change" data-filename="${esc(pageId)}-${esc(version.id)}-change-dev.md" data-download-label="下载本版变更">${esc(versionChange)}</pre>
+      <pre class="wb-doc wb-document" id="${esc(snapshotDocId)}" data-document-mode="snapshot" data-filename="${esc(pageId)}-${esc(version.id)}-snapshot-dev.md" data-download-label="下载完整规格" hidden>${esc(versionSnapshot)}</pre>
     </section>`;
   }).join('');
   return `<section class="wb-page${first ? ' is-active' : ''}" data-page-key="${esc(key)}">
@@ -836,8 +839,14 @@ function renderPageWorkspace(root, moduleId, pageId, first) {
     </div>
     <div class="wb-tab-panel" data-panel="development">
       <div class="wb-doc-toolbar">
-        <label class="wb-version-field"><span>开发文档版本</span><select class="wb-version-select" aria-label="${esc(page.title)}开发文档版本">${versionOptions}</select></label>
-        <button class="wb-button" type="button" data-download="${safeKey}-dev-${String(current.released || '').replace(/[^a-z0-9]+/gi, '-')}" data-download-selected data-filename="${esc(pageId)}-${esc(current.released || 'draft')}-dev.md">下载所选开发规格</button>
+        <div class="wb-doc-controls">
+          <label class="wb-version-field"><span>开发文档版本</span><select class="wb-version-select" aria-label="${esc(page.title)}开发文档版本">${versionOptions}</select></label>
+          <div class="wb-document-mode" role="group" aria-label="${esc(page.title)}开发文档视图">
+            <button class="wb-document-mode-button" type="button" aria-pressed="true" data-document-mode="change">本版变更</button>
+            <button class="wb-document-mode-button" type="button" aria-pressed="false" data-document-mode="snapshot">完整规格</button>
+          </div>
+        </div>
+        <button class="wb-button" type="button" data-download="${safeKey}-dev-${String(current.released || '').replace(/[^a-z0-9]+/gi, '-')}-change" data-download-selected data-filename="${esc(pageId)}-${esc(current.released || 'draft')}-change-dev.md">下载本版变更</button>
       </div>
       ${versionViews || '<div class="wb-empty">暂无已发布的开发规格。</div>'}
     </div>
