@@ -7,7 +7,7 @@
     "entry": "prototype/index.html",
     "revision": 1,
     "alignedToSpec": "v1.0",
-    "status": "aligned",
+    "status": "docs-ahead",
     "lastAlignedAt": "2026-09-15T09:38:18.978Z",
     "note": "登录原型 v1.0 已通过 TST-001 至 TST-006 浏览器验证"
   },

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 2,
+  "id": "v1.1",
+  "parent": "v1.0",
+  "kind": "change",
+  "mode": "docs-only",
+  "status": "released",
+  "source": "工作台按页面版本预览开发 Markdown 并关联版本 MR/Diff 范围",
+  "createdAt": "2026-09-15T09:49:45.073Z",
+  "publishedAt": "2026-09-15T09:51:46.414Z",
+  "files": {
+    "changeDev": "change-dev.md",
+    "changeTest": "change-test.md",
+    "snapshotDev": "snapshot-dev.md",
+    "snapshotTest": "snapshot-test.md",
+    "evidence": "evidence.json",
+    "trace": "trace.json"
+  },
+  "hashes": {
+    "change-dev.md": "99f58edbde7de502e9456b16ce595a5c85dee14e033118fddb0c074f33b6c48c",
+    "change-test.md": "0420a5ee6f314abaef28f1d13809b98c4efaa649b5ce875d3cecf03ebece2367",
+    "snapshot-dev.md": "0f84a5513915a474116f3daaab9dcf1c927f97c7cf5ad35ea70b20c9384cfa3a",
+    "snapshot-test.md": "e6b4941dfc98347384fb9caa6ffe4a15d0bf00b5d46d3e20fd8c8b4add3e4666",
+    "evidence.json": "84b47e12202cc817df9a8b4e6407ff8ba434e68ee573d8e603e90d81a546e0da"
+  }
+}
