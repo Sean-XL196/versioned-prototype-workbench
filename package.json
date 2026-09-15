@@ -1,0 +1,15 @@
+{
+  "name": "versioned-prototype-workbench",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "protoctl": "./scripts/protoctl.mjs"
+  },
+  "scripts": {
+    "test": "node ./tests/protoctl.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/versioned-prototype-workbench/release.schema.json",
+  "title": "Module prototype release",
+  "type": "object",
+  "required": ["schemaVersion", "id", "module", "createdAt", "allowDocsAhead", "pages"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*-r[1-9][0-9]*$" },
+    "module": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "allowDocsAhead": { "type": "boolean" },
+    "pages": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["spec", "prototypeRevision", "alignedToSpec", "status", "baselineCommit", "implementationCommit", "changeRequest"],
+        "properties": {
+          "spec": { "type": "string" },
+          "prototypeRevision": { "type": "integer", "minimum": 0 },
+          "alignedToSpec": { "type": ["string", "null"] },
+          "status": { "enum": ["draft", "aligned", "docs-ahead"] },
+          "baselineCommit": { "type": ["string", "null"] },
+          "implementationCommit": { "type": ["string", "null"] },
+          "changeRequest": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

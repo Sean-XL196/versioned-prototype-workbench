@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "revision": 1,
+  "alignedToSpec": "v1.0",
+  "createdAt": "2026-09-15T07:15:32.961Z",
+  "note": "Baseline interaction verified",
+  "hashes": {
+    "prototype/fixtures.js": "5e380cb29dd77b6170b2222504f12c5ca04a49b069dd149e5d0e7b2b331a0a08",
+    "prototype/index.html": "466ea2297419a2a2a3aa3f27275da6fecb2acc5fd175482c563b1e31eef839bb",
+    "prototype/page.css": "bb98a6266bacad621ff5a224717aafe64f0d07d236b9acf7d7136386901cecff",
+    "prototype/page.js": "c05c1b5db95b769d8824522fca85b04fee694423986e5c7ccf24930e9be928ce"
+  },
+  "evidenceIds": [
+    "REQ-001",
+    "INT-001",
+    "RULE-001"
+  ],
+  "implementationCommit": null
+}

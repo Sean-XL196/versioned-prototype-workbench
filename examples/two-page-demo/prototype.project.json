@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 2,
+  "id": "operations-review-demo",
+  "name": "运营评审演示",
+  "repository": null,
+  "design": {
+    "standard": "operational-ui-v1",
+    "tokenFile": "shared/design-system.css"
+  },
+  "modules": [
+    "operations"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 2,
+  "revision": 4,
+  "alignedToSpec": "v1.1",
+  "createdAt": "2026-09-15T07:26:59.544Z",
+  "note": "Priority subline verified at desktop and mobile widths",
+  "hashes": {
+    "modules/operations/pages/requests/prototype/fixtures.js": "1cb736bb6b90632f32b7685b577b72019a46cc16e46fdd21b3a65cfc051ce311",
+    "modules/operations/pages/requests/prototype/index.html": "96f2abe6dd4e6b8ca26226f2cc34e3ed3c9e28fd1280afdefdee3f35616311a6",
+    "modules/operations/pages/requests/prototype/page.css": "8cdea5075a8aee3da24d9b98b8ef7dc2dc630a62d29278e56f1a9088340b4db5",
+    "modules/operations/pages/requests/prototype/page.js": "7f0439db40defb572e7b4989f5688480bb4d9748866f50101b09f8d36b1ef6ee",
+    "shared/shell.css": "86fde868e1a992305f3d79f55bef20262317fdc03c868c1a479e18655b55b2e1",
+    "shared/shell.js": "9269fef9633168b915c8406c2fca99ae0ef55ad79c181771f9182956b425a767"
+  },
+  "evidenceIds": [
+    "CHG-001",
+    "REQ-002"
+  ],
+  "implementationCommit": null
+}

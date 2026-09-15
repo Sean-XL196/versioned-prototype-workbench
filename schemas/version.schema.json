@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/versioned-prototype-workbench/version.schema.json",
+  "title": "Page specification version",
+  "type": "object",
+  "required": ["schemaVersion", "id", "parent", "kind", "mode", "status", "source", "createdAt", "publishedAt", "files", "hashes"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "type": "string", "pattern": "^v(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$" },
+    "parent": { "type": ["string", "null"] },
+    "kind": { "enum": ["baseline", "change"] },
+    "mode": { "enum": ["baseline", "docs-only", "spec-and-prototype"] },
+    "status": { "enum": ["draft", "released"] },
+    "source": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string" },
+    "publishedAt": { "type": ["string", "null"] },
+    "files": {
+      "type": "object",
+      "required": ["changeDev", "changeTest", "snapshotDev", "snapshotTest", "evidence", "trace"],
+      "properties": {
+        "changeDev": { "const": "change-dev.md" },
+        "changeTest": { "const": "change-test.md" },
+        "snapshotDev": { "const": "snapshot-dev.md" },
+        "snapshotTest": { "const": "snapshot-test.md" },
+        "evidence": { "const": "evidence.json" },
+        "trace": { "const": "trace.json" }
+      },
+      "additionalProperties": false
+    },
+    "hashes": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+    }
+  },
+  "additionalProperties": false
+}

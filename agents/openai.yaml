@@ -1,0 +1,8 @@
+interface:
+  display_name: "版本化交互原型工作台"
+  short_description: "生成可追溯的版本文档与页面级交互原型"
+  brand_color: "#0B6B5B"
+  default_prompt: "使用 $versioned-prototype-workbench 将这项需求整理为版本化规格、证据索引和页面级交互原型。"
+
+policy:
+  allow_implicit_invocation: true

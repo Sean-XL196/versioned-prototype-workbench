@@ -1,0 +1,5 @@
+.section-title { margin: 0 0 12px; font-size: 16px; }
+.status-cell { display: flex; align-items: center; gap: 8px; }
+.status-cell::before { width: 7px; height: 7px; border-radius: 50%; background: var(--vpw-color-success); content: ""; }
+.status-cell[data-status="Blocked"] { color: var(--vpw-color-danger); }
+.status-cell[data-status="Blocked"]::before { background: var(--vpw-color-danger); }

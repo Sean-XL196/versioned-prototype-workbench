@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 2,
+  "id": "v1.1",
+  "parent": "v1.0",
+  "kind": "change",
+  "mode": "spec-and-prototype",
+  "status": "released",
+  "source": "Operational UI design standard template",
+  "createdAt": "2026-09-15T08:03:59.057Z",
+  "publishedAt": "2026-09-15T08:05:35.189Z",
+  "files": {
+    "changeDev": "change-dev.md",
+    "changeTest": "change-test.md",
+    "snapshotDev": "snapshot-dev.md",
+    "snapshotTest": "snapshot-test.md",
+    "evidence": "evidence.json",
+    "trace": "trace.json"
+  },
+  "hashes": {
+    "change-dev.md": "4253951acfbfa9d14985bb0144658e1a1ddf3e72083575fd6be8003cf286a505",
+    "change-test.md": "36fd7b15744a26d32542a869613feef4559ad6d6c7a017171d05825bb981a475",
+    "snapshot-dev.md": "02e84e8b6480bef5119dff0ff067fabda609fb10e30166419be1bd0c36bea44a",
+    "snapshot-test.md": "627939e9f37f9426cdfa2a085835dae76ea9e8882da5c86ab5eb55a19acf5611",
+    "evidence.json": "22b17482abdac08627286457affe74d25ee5841d3bc5d9ab0e65853d36da7695"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "revision": 2,
+  "alignedToSpec": "v1.0",
+  "createdAt": "2026-09-15T07:19:36.884Z",
+  "note": "Responsive shell and clean standalone markup verified",
+  "hashes": {
+    "modules/operations/pages/requests/prototype/fixtures.js": "0bd1ebb7bef34364b4a330e11a50cde828febf442254b166652e74ddaa806216",
+    "modules/operations/pages/requests/prototype/index.html": "96f2abe6dd4e6b8ca26226f2cc34e3ed3c9e28fd1280afdefdee3f35616311a6",
+    "modules/operations/pages/requests/prototype/page.css": "bb98a6266bacad621ff5a224717aafe64f0d07d236b9acf7d7136386901cecff",
+    "modules/operations/pages/requests/prototype/page.js": "c05c1b5db95b769d8824522fca85b04fee694423986e5c7ccf24930e9be928ce",
+    "shared/shell.css": "736ad4c05226770357e23467c081065d8c8e44aca162cc39a8e79f209777b9b1",
+    "shared/shell.js": "9269fef9633168b915c8406c2fca99ae0ef55ad79c181771f9182956b425a767"
+  },
+  "evidenceIds": [
+    "REQ-001",
+    "INT-001",
+    "RULE-001"
+  ],
+  "implementationCommit": null
+}

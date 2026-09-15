@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 2,
+  "id": "v1.0",
+  "parent": null,
+  "kind": "baseline",
+  "mode": "baseline",
+  "status": "released",
+  "source": "Initial baseline",
+  "createdAt": "2026-09-15T07:14:26.344Z",
+  "publishedAt": "2026-09-15T07:15:32.934Z",
+  "files": {
+    "changeDev": "change-dev.md",
+    "changeTest": "change-test.md",
+    "snapshotDev": "snapshot-dev.md",
+    "snapshotTest": "snapshot-test.md",
+    "evidence": "evidence.json",
+    "trace": "trace.json"
+  },
+  "hashes": {
+    "change-dev.md": "474e9e5b73128ed9435d3a9183725d55d8635e209e259c234df1f1c02e07f6f7",
+    "change-test.md": "9ffbd7433cdf7cfafbc26c5988d577856bea1dce71469a494d081314de55067c",
+    "snapshot-dev.md": "c09333edd72b6ed8ad90d3b79872bb99df8be540a2e71f2f17a1c6586ba95497",
+    "snapshot-test.md": "00f7aa9396caea2ce1f5bfb9ddc27cf3c74adfebeaa54b98dedcc86855c00380",
+    "evidence.json": "bc2e877096f2ad9ece49b4446832dff93b35ee6e6bbcc77a577782d45cdcd712"
+  }
+}

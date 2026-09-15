@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "revision": 4,
+  "alignedToSpec": "v1.1",
+  "evidenceIds": [
+    "CHG-001",
+    "REQ-002",
+    "INT-002"
+  ],
+  "implementationCommit": null,
+  "createdAt": "2026-09-15T08:05:50.231Z",
+  "note": "运营界面模板已验证",
+  "hashes": {
+    "modules/operations/pages/approvals/prototype/fixtures.js": "2b45e912de0bc110394e442ca377ab7465bf1a885c7ff86a14c73e4261ec0d50",
+    "modules/operations/pages/approvals/prototype/index.html": "c2d015824fc6c2a3611f521ece562bb8166419790a872966fd4a5bf8aa8d7d37",
+    "modules/operations/pages/approvals/prototype/page.css": "a8885c737ced5c4a530b8fdf548e074b346abe533be024025ddf101c740cd294",
+    "modules/operations/pages/approvals/prototype/page.js": "30b61cef585ee826dfffa7640c479e5b1aa4814c89bd05372c07e14658aec53c",
+    "shared/design-system.css": "c61673b6505c3fa3f3871ff26156441da7371335703d87a5f8516e80ba4a2d48",
+    "shared/shell.css": "ad6baf409f4a68d1237ae6c520c3d08da79639fe383470110d3a0bb5c55608c3",
+    "shared/shell.js": "ba201bbe77784ba888c1d0fedc70fd69faa043bf88dacd624ebe8ddc2c1eca8e"
+  }
+}

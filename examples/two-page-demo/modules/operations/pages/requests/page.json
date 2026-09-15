@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 2,
+  "id": "requests",
+  "module": "operations",
+  "title": "服务请求",
+  "prototype": {
+    "entry": "prototype/index.html",
+    "revision": 5,
+    "alignedToSpec": "v1.2",
+    "status": "aligned",
+    "lastAlignedAt": "2026-09-15T08:05:50.230Z",
+    "note": "运营界面模板已验证"
+  },
+  "dependencies": {
+    "pages": [],
+    "contracts": []
+  }
+}

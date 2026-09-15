@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "revision": 3,
+  "alignedToSpec": "v1.0",
+  "createdAt": "2026-09-15T07:23:47.249Z",
+  "note": "Mobile table layout verified",
+  "hashes": {
+    "modules/operations/pages/approvals/prototype/fixtures.js": "5e380cb29dd77b6170b2222504f12c5ca04a49b069dd149e5d0e7b2b331a0a08",
+    "modules/operations/pages/approvals/prototype/index.html": "1dcdff570052fed7d27d16bb71e529110b3c6e5699a1d2814873f08b6cd5ebb6",
+    "modules/operations/pages/approvals/prototype/page.css": "bb98a6266bacad621ff5a224717aafe64f0d07d236b9acf7d7136386901cecff",
+    "modules/operations/pages/approvals/prototype/page.js": "c05c1b5db95b769d8824522fca85b04fee694423986e5c7ccf24930e9be928ce",
+    "shared/shell.css": "86fde868e1a992305f3d79f55bef20262317fdc03c868c1a479e18655b55b2e1",
+    "shared/shell.js": "9269fef9633168b915c8406c2fca99ae0ef55ad79c181771f9182956b425a767"
+  },
+  "evidenceIds": [
+    "REQ-001",
+    "INT-001",
+    "RULE-001"
+  ],
+  "implementationCommit": null
+}

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2,
+  "id": "operations",
+  "title": "运营管理",
+  "currentRelease": "operations-r5",
+  "pages": [
+    "requests",
+    "approvals"
+  ]
+}

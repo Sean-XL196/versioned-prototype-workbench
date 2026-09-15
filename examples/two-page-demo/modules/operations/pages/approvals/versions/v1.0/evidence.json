@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 2,
+  "version": "v1.0",
+  "entries": {
+    "SRC-001": { "kind": "source", "summary": "Initial approvals review brief" },
+    "REQ-001": { "kind": "requirement", "summary": "Show approval id, status, and amount", "sourceIds": ["SRC-001"], "prototypeTargets": ["#rows"], "testIds": ["TST-001"] },
+    "INT-001": { "kind": "interaction", "summary": "Primary action reports its result in the notice", "requirementIds": ["REQ-001"], "prototypeTargets": ["#primary-action"], "testIds": ["TST-002"] },
+    "RULE-001": { "kind": "rule", "summary": "Blocked approvals prevent successful completion", "requirementIds": ["REQ-001"], "testIds": ["TST-002"] },
+    "TST-001": { "kind": "test", "summary": "Approval records render", "requirementIds": ["REQ-001"] },
+    "TST-002": { "kind": "test", "summary": "Blocked approval produces a rejection", "requirementIds": ["INT-001", "RULE-001"] }
+  }
+}

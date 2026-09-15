@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "id": "operations-r1",
+  "module": "operations",
+  "createdAt": "2026-09-15T07:15:33.051Z",
+  "allowDocsAhead": false,
+  "pages": {
+    "requests": {
+      "spec": "v1.0",
+      "prototypeRevision": 1,
+      "alignedToSpec": "v1.0",
+      "status": "aligned",
+      "baselineCommit": null,
+      "implementationCommit": null,
+      "changeRequest": {
+        "kind": null,
+        "id": null,
+        "url": null,
+        "headCommit": null,
+        "mergeCommit": null
+      }
+    },
+    "approvals": {
+      "spec": "v1.0",
+      "prototypeRevision": 1,
+      "alignedToSpec": "v1.0",
+      "status": "aligned",
+      "baselineCommit": null,
+      "implementationCommit": null,
+      "changeRequest": {
+        "kind": null,
+        "id": null,
+        "url": null,
+        "headCommit": null,
+        "mergeCommit": null
+      }
+    }
+  }
+}

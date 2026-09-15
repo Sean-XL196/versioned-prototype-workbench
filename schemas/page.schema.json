@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/versioned-prototype-workbench/page.schema.json",
+  "title": "Prototype page",
+  "type": "object",
+  "required": ["schemaVersion", "id", "module", "title", "prototype", "dependencies"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "module": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "prototype": {
+      "type": "object",
+      "required": ["entry", "revision", "alignedToSpec", "status", "lastAlignedAt", "note"],
+      "properties": {
+        "entry": { "type": "string", "minLength": 1 },
+        "revision": { "type": "integer", "minimum": 0 },
+        "alignedToSpec": { "type": ["string", "null"] },
+        "status": { "enum": ["draft", "aligned", "docs-ahead"] },
+        "lastAlignedAt": { "type": ["string", "null"] },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "dependencies": {
+      "type": "object",
+      "required": ["pages", "contracts"],
+      "properties": {
+        "pages": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "contracts": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

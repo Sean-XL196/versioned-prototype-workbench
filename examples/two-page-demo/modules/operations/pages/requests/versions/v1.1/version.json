@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 2,
+  "id": "v1.1",
+  "parent": "v1.0",
+  "kind": "change",
+  "mode": "docs-only",
+  "status": "released",
+  "source": "Example customer feedback: show request priority",
+  "createdAt": "2026-09-15T07:25:37.749Z",
+  "publishedAt": "2026-09-15T07:26:36.977Z",
+  "files": {
+    "changeDev": "change-dev.md",
+    "changeTest": "change-test.md",
+    "snapshotDev": "snapshot-dev.md",
+    "snapshotTest": "snapshot-test.md",
+    "evidence": "evidence.json",
+    "trace": "trace.json"
+  },
+  "hashes": {
+    "change-dev.md": "fd1b034f79790993caf70b85000ba00737a8da5bf6b97cab71276bc93be11238",
+    "change-test.md": "c35cb9b1625c7565a300909767ecf14d75463b8f708b36c6b562398b169af0f5",
+    "snapshot-dev.md": "68bcc8fa751488c7cc31cb7c66c78b1ea626b610cbea747ec1719a84e99ce0e4",
+    "snapshot-test.md": "c19a6d993fc6b781edc0146d902d67ec118e049b9edac13389b081618a908378",
+    "evidence.json": "522a537ab1c6e542503c31b7fa272aabb77ce1379da356937a03baa9ed975072"
+  }
+}

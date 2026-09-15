@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 2,
+  "version": "v1.1",
+  "entries": {
+    "SRC-001": {
+      "kind": "source",
+      "summary": "初始审批评审需求"
+    },
+    "REQ-001": {
+      "kind": "requirement",
+      "summary": "显示审批编号、状态与金额",
+      "sourceIds": [
+        "SRC-001"
+      ],
+      "prototypeTargets": [
+        "#rows"
+      ],
+      "testIds": [
+        "TST-001"
+      ]
+    },
+    "INT-001": {
+      "kind": "interaction",
+      "summary": "主要操作通过提示区反馈结果",
+      "requirementIds": [
+        "REQ-001"
+      ],
+      "prototypeTargets": [
+        "#primary-action"
+      ],
+      "testIds": [
+        "TST-002"
+      ]
+    },
+    "RULE-001": {
+      "kind": "rule",
+      "summary": "已阻塞审批会阻止操作成功完成",
+      "requirementIds": [
+        "REQ-001"
+      ],
+      "testIds": [
+        "TST-002"
+      ]
+    },
+    "TST-001": {
+      "kind": "test",
+      "summary": "审批记录正确渲染",
+      "requirementIds": [
+        "REQ-001"
+      ]
+    },
+    "TST-002": {
+      "kind": "test",
+      "summary": "已阻塞审批触发拒绝提示",
+      "requirementIds": [
+        "INT-001",
+        "RULE-001"
+      ]
+    },
+    "SRC-002": {
+      "kind": "source",
+      "summary": "运营界面设计标准模板"
+    },
+    "ASIS-001": {
+      "kind": "as-is",
+      "summary": "页面原本只有简单面板，没有筛选与汇总状态",
+      "path": "prototype/index.html",
+      "symbol": "main.workspace"
+    },
+    "CHG-001": {
+      "kind": "change",
+      "summary": "采用共享运营工作区与评审控件",
+      "sourceIds": [
+        "SRC-002"
+      ],
+      "evidenceIds": [
+        "ASIS-001"
+      ],
+      "requirementIds": [
+        "REQ-002"
+      ]
+    },
+    "REQ-002": {
+      "kind": "requirement",
+      "summary": "提供汇总指标、筛选、CSV 导出、重置、空状态及响应式表格",
+      "sourceIds": [
+        "SRC-002"
+      ],
+      "evidenceIds": [
+        "ASIS-001"
+      ],
+      "prototypeTargets": [
+        ".metrics",
+        "#search",
+        "#status-filter",
+        "#reset-filters",
+        "#secondary-action"
+      ],
+      "testIds": [
+        "TST-003"
+      ]
+    },
+    "TST-003": {
+      "kind": "test",
+      "summary": "验证响应式布局、筛选、空状态与重置",
+      "requirementIds": [
+        "REQ-002",
+        "CHG-001",
+        "INT-002"
+      ]
+    },
+    "INT-002": {
+      "kind": "interaction",
+      "summary": "筛选更新审批，导出下载当前结果，重置恢复全部行",
+      "requirementIds": ["REQ-002"],
+      "prototypeTargets": ["#search", "#status-filter", "#reset-filters", "#secondary-action", "#empty-state"],
+      "testIds": ["TST-003"]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/versioned-prototype-workbench/project.schema.json",
+  "title": "Versioned prototype project",
+  "type": "object",
+  "required": ["schemaVersion", "id", "name", "repository", "design", "modules"],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "$ref": "#/$defs/id" },
+    "name": { "type": "string", "minLength": 1 },
+    "repository": {
+      "type": ["object", "null"],
+      "properties": {
+        "root": { "type": "string", "minLength": 1 },
+        "remote": { "type": ["string", "null"] }
+      },
+      "required": ["root", "remote"],
+      "additionalProperties": false
+    },
+    "design": {
+      "type": "object",
+      "properties": {
+        "standard": { "const": "operational-ui-v1" },
+        "tokenFile": { "type": "string" }
+      },
+      "required": ["standard", "tokenFile"],
+      "additionalProperties": false
+    },
+    "modules": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+  }
+}
