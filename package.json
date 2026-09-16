@@ -1,6 +1,6 @@
 {
-  "name": "versioned-prototype-workbench",
-  "version": "2.0.0",
+  "name": "versioned-prototype-workbench-repo",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "bin": {

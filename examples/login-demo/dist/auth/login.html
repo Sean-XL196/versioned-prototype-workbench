@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>账号登录 · 测试工作台</title>
+  <style data-source="../../../../../shared/design-system.css">
+:root {
+  color-scheme: light;
+  --vpw-font-sans: Inter, "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --vpw-color-canvas: #f4f6f8;
+  --vpw-color-surface: #ffffff;
+  --vpw-color-surface-muted: #f8fafb;
+  --vpw-color-ink: #172126;
+  --vpw-color-ink-muted: #5d6b72;
+  --vpw-color-border: #d8dfe3;
+  --vpw-color-border-strong: #bbc6cc;
+  --vpw-color-brand: #0b6b5b;
+  --vpw-color-brand-strong: #075448;
+  --vpw-color-brand-soft: #e8f4f1;
+  --vpw-color-info: #245b8f;
+  --vpw-color-info-soft: #eaf2f9;
+  --vpw-color-warning: #9a5b08;
+  --vpw-color-warning-soft: #fff4dc;
+  --vpw-color-danger: #b42318;
+  --vpw-color-danger-soft: #fff0ee;
+  --vpw-color-success: #16794a;
+  --vpw-color-success-soft: #eaf7f0;
+  --vpw-shadow-float: 0 12px 32px rgba(23, 33, 38, 0.12);
+  --vpw-radius-control: 4px;
+  --vpw-radius-panel: 6px;
+  --vpw-space-1: 4px;
+  --vpw-space-2: 8px;
+  --vpw-space-3: 12px;
+  --vpw-space-4: 16px;
+  --vpw-space-5: 20px;
+  --vpw-space-6: 24px;
+  --vpw-space-8: 32px;
+  --vpw-control-height: 36px;
+  --vpw-header-height: 56px;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--vpw-color-canvas); }
+body { margin: 0; color: var(--vpw-color-ink); background: var(--vpw-color-canvas); font-family: var(--vpw-font-sans); font-size: 14px; line-height: 1.5; letter-spacing: 0; }
+button, input, select, textarea { font: inherit; letter-spacing: 0; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(36, 91, 143, 0.28); outline-offset: 2px; }
+
+.vpw-button {
+  min-height: var(--vpw-control-height);
+  border: 1px solid var(--vpw-color-border-strong);
+  border-radius: var(--vpw-radius-control);
+  padding: 7px 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--vpw-color-ink);
+  background: var(--vpw-color-surface);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.vpw-button:hover { border-color: #8c9aa2; background: var(--vpw-color-surface-muted); }
+.vpw-button--primary { border-color: var(--vpw-color-brand); color: #fff; background: var(--vpw-color-brand); }
+.vpw-button--primary:hover { border-color: var(--vpw-color-brand-strong); background: var(--vpw-color-brand-strong); }
+.vpw-button--danger { border-color: #e5aaa4; color: var(--vpw-color-danger); background: var(--vpw-color-danger-soft); }
+.vpw-button--icon { width: var(--vpw-control-height); padding: 0; }
+.vpw-button[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+.vpw-field { display: grid; gap: 6px; min-width: 0; }
+.vpw-label { color: var(--vpw-color-ink-muted); font-size: 12px; font-weight: 650; }
+.vpw-input, .vpw-select {
+  width: 100%;
+  height: var(--vpw-control-height);
+  border: 1px solid var(--vpw-color-border-strong);
+  border-radius: var(--vpw-radius-control);
+  padding: 0 11px;
+  color: var(--vpw-color-ink);
+  background: var(--vpw-color-surface);
+}
+.vpw-input::placeholder { color: #8a969d; }
+
+.vpw-badge {
+  min-height: 24px;
+  border: 1px solid var(--vpw-color-border);
+  border-radius: 999px;
+  padding: 2px 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--vpw-color-ink-muted);
+  background: var(--vpw-color-surface-muted);
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.vpw-badge::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; content: ""; }
+.vpw-badge--success { border-color: #b9dfca; color: var(--vpw-color-success); background: var(--vpw-color-success-soft); }
+.vpw-badge--warning { border-color: #eed39a; color: var(--vpw-color-warning); background: var(--vpw-color-warning-soft); }
+.vpw-badge--danger { border-color: #f0b8b2; color: var(--vpw-color-danger); background: var(--vpw-color-danger-soft); }
+.vpw-badge--info { border-color: #b9d1e6; color: var(--vpw-color-info); background: var(--vpw-color-info-soft); }
+
+.vpw-panel { border: 1px solid var(--vpw-color-border); border-radius: var(--vpw-radius-panel); background: var(--vpw-color-surface); }
+.vpw-table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--vpw-color-border); border-radius: var(--vpw-radius-panel); background: var(--vpw-color-surface); }
+.vpw-table { width: 100%; min-width: 680px; border-collapse: collapse; table-layout: fixed; }
+.vpw-table th, .vpw-table td { padding: 12px 14px; border-bottom: 1px solid #e8edef; text-align: left; vertical-align: middle; overflow-wrap: anywhere; }
+.vpw-table th { color: var(--vpw-color-ink-muted); background: var(--vpw-color-surface-muted); font-size: 12px; font-weight: 700; }
+.vpw-table tbody tr:last-child td { border-bottom: 0; }
+.vpw-table tbody tr:hover { background: #fbfcfc; }
+
+.vpw-empty { min-height: 180px; padding: 32px; display: grid; place-items: center; color: var(--vpw-color-ink-muted); text-align: center; }
+.vpw-toast { position: fixed; right: 20px; bottom: 20px; z-index: 50; max-width: min(420px, calc(100vw - 40px)); border: 1px solid #b9d1e6; border-radius: var(--vpw-radius-panel); padding: 12px 14px; color: var(--vpw-color-info); background: var(--vpw-color-info-soft); box-shadow: var(--vpw-shadow-float); }
+[hidden] { display: none !important; }
+
+@media (max-width: 720px) {
+  .vpw-button { min-height: 40px; }
+  .vpw-toast { right: 12px; bottom: 12px; max-width: calc(100vw - 24px); }
+}
+
+</style>
+  <style data-source="./page.css">
+:root {
+  color-scheme: light;
+  --login-blue-950: #102f50;
+  --login-blue-800: #174f82;
+  --login-blue-600: #1f6fb2;
+  --login-blue-100: #e8f2fb;
+  --login-blue-050: #f4f8fc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--vpw-color-ink);
+  background: var(--vpw-color-canvas);
+  font-family: var(--vpw-font-sans);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+label,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(360px, 0.9fr) minmax(520px, 1.1fr);
+  background: var(--vpw-color-surface);
+}
+
+.login-brand {
+  min-height: 100vh;
+  padding: 42px clamp(36px, 5vw, 76px) 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  background-color: var(--login-blue-950);
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+}
+
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--login-blue-950);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.brand-name {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.brand-message {
+  max-width: 520px;
+}
+
+.brand-kicker {
+  margin: 0 0 14px;
+  color: #a8cdf0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.brand-message h1 {
+  max-width: 480px;
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.16;
+  letter-spacing: 0;
+}
+
+.brand-message > p:last-child {
+  max-width: 460px;
+  margin: 24px 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.brand-highlights {
+  max-width: 420px;
+  margin: 28px 0 22px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  list-style: none;
+}
+
+.brand-highlights li {
+  min-height: 62px;
+  padding: 11px 12px;
+  border: 1px solid rgba(168, 205, 240, 0.24);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 12px;
+}
+
+.highlight-index {
+  color: #a8cdf0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.environment-toggle {
+  min-height: 36px;
+  padding: 7px 0;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #d5e8fa;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.environment-toggle:hover,
+.environment-toggle:focus-visible {
+  color: #ffffff;
+}
+
+.environment-toggle:focus-visible {
+  outline: 3px solid rgba(168, 205, 240, 0.5);
+  outline-offset: 4px;
+}
+
+.environment-toggle-icon {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.16s ease;
+}
+
+.environment-toggle[aria-expanded="true"] .environment-toggle-icon {
+  transform: rotate(225deg) translate(-1px, -1px);
+}
+
+.environment-details {
+  max-width: 420px;
+  margin-top: 4px;
+  padding: 12px 14px;
+  border-left: 2px solid rgba(168, 205, 240, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.environment-details dl {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.environment-details dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+}
+
+.environment-details dt,
+.environment-details dd {
+  margin: 0;
+}
+
+.environment-details dd {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: right;
+}
+
+.brand-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+}
+
+.brand-status-separator {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7cc5ff;
+  box-shadow: 0 0 0 4px rgba(124, 197, 255, 0.14);
+}
+
+.login-main {
+  min-height: 100vh;
+  padding: 48px;
+  display: grid;
+  place-items: center;
+  background: var(--login-blue-050);
+}
+
+.login-panel {
+  width: min(100%, 420px);
+  padding: 36px;
+  border: 1px solid var(--vpw-color-border);
+  border-radius: 6px;
+  background: var(--vpw-color-surface);
+  box-shadow: 0 18px 48px rgba(16, 47, 80, 0.12);
+}
+
+.login-heading {
+  margin-bottom: 28px;
+}
+
+.environment-badge {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  color: var(--login-blue-800);
+  background: var(--login-blue-100);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.login-heading h2 {
+  margin: 14px 0 6px;
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.login-heading p {
+  margin: 0;
+  color: var(--vpw-color-ink-muted);
+  font-size: 14px;
+}
+
+.form-notice {
+  min-height: 42px;
+  margin-bottom: 18px;
+  padding: 11px 12px;
+  border-left: 3px solid var(--vpw-color-info);
+  background: var(--vpw-color-info-soft);
+  color: var(--vpw-color-info);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.form-notice[data-tone="danger"] {
+  border-color: var(--vpw-color-danger);
+  background: var(--vpw-color-danger-soft);
+  color: var(--vpw-color-danger);
+}
+
+.form-notice[data-tone="success"] {
+  border-color: var(--vpw-color-success);
+  background: var(--vpw-color-success-soft);
+  color: var(--vpw-color-success);
+}
+
+.form-notice[hidden] {
+  display: none;
+}
+
+.field-group {
+  margin-bottom: 18px;
+}
+
+.field-group > label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--vpw-color-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.field-group input[type="text"],
+.field-group input[type="password"] {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--vpw-color-border-strong);
+  border-radius: 4px;
+  color: var(--vpw-color-ink);
+  background: #ffffff;
+  outline: none;
+}
+
+.field-group input:focus {
+  border-color: var(--login-blue-600);
+  box-shadow: 0 0 0 3px var(--login-blue-100);
+}
+
+.field-group input[aria-invalid="true"] {
+  border-color: var(--vpw-color-danger);
+}
+
+.field-group input:disabled {
+  background: var(--vpw-color-surface-muted);
+  cursor: not-allowed;
+}
+
+.password-control {
+  position: relative;
+}
+
+.password-control input {
+  padding-right: 64px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 52px;
+  height: 36px;
+  border: 0;
+  border-radius: 4px;
+  color: var(--login-blue-600);
+  background: transparent;
+  cursor: pointer;
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+  background: var(--login-blue-100);
+  outline: none;
+}
+
+.field-error {
+  min-height: 18px;
+  margin: 5px 0 0;
+  color: var(--vpw-color-danger);
+  font-size: 12px;
+}
+
+.form-options {
+  min-height: 36px;
+  margin: 2px 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.remember-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--vpw-color-ink-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.remember-option input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--vpw-color-brand);
+}
+
+.text-button {
+  border: 0;
+  padding: 6px 0;
+  color: var(--login-blue-600);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.text-button:hover,
+.text-button:focus-visible {
+  text-decoration: underline;
+}
+
+.submit-button {
+  width: 100%;
+  height: 44px;
+  border: 0;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #ffffff;
+  background: var(--login-blue-600);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.submit-button:hover {
+  background: var(--login-blue-800);
+}
+
+.submit-button:focus-visible,
+.text-button:focus-visible,
+.remember-option input:focus-visible {
+  outline: 3px solid var(--login-blue-100);
+  outline-offset: 2px;
+}
+
+.submit-button:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  display: none;
+  border: 2px solid rgba(255, 255, 255, 0.38);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.submit-button.is-loading .button-spinner {
+  display: inline-block;
+}
+
+.login-footer {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--vpw-color-border);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--vpw-color-ink-muted);
+  font-size: 11px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button-spinner,
+  .environment-toggle-icon { animation: none; transition: none; }
+}
+
+@media (max-width: 820px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .login-brand {
+    min-height: auto;
+    padding: 20px 24px;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .brand-message {
+    min-width: 0;
+    margin-left: 22px;
+    flex: 1;
+  }
+
+  .brand-message h1 {
+    margin: 0 0 2px;
+    font-size: 20px;
+  }
+
+  .brand-kicker,
+  .brand-message > p:last-child,
+  .brand-highlights,
+  .brand-status {
+    display: none;
+  }
+
+  .environment-toggle {
+    min-height: 30px;
+    font-size: 12px;
+  }
+
+  .login-main {
+    min-height: calc(100vh - 80px);
+    padding: 32px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-brand {
+    padding: 16px 18px;
+  }
+
+  .brand-lockup {
+    gap: 8px;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .brand-name {
+    font-size: 14px;
+  }
+
+  .brand-message {
+    margin-left: 14px;
+  }
+
+  .brand-message h1 {
+    font-size: 16px;
+  }
+
+  .environment-toggle {
+    padding: 4px 0;
+    font-size: 11px;
+  }
+
+  .login-main {
+    min-height: calc(100vh - 70px);
+    padding: 24px 16px;
+    align-items: start;
+  }
+
+  .login-panel {
+    padding: 26px 22px;
+    box-shadow: none;
+  }
+
+  .login-footer {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+</style>
+</head>
+<body>
+  <main class="login-shell">
+    <section class="login-brand" aria-labelledby="brand-title">
+      <div class="brand-lockup">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span class="brand-name">测试工作台</span>
+      </div>
+      <div class="brand-message">
+        <p class="brand-kicker">测试环境 · AUTH CENTER</p>
+        <h1 id="brand-title">让每次验证都有清晰上下文</h1>
+        <p>为评审与联调提供稳定、可回溯的账号入口，操作记录将按账号留痕。</p>
+        <ul class="brand-highlights" aria-label="测试工作台能力">
+          <li><span class="highlight-index">01</span><span>多环境验证</span></li>
+          <li><span class="highlight-index">02</span><span>账号状态可见</span></li>
+          <li><span class="highlight-index">03</span><span>操作记录留痕</span></li>
+        </ul>
+        <button id="environment-toggle" class="environment-toggle" type="button" aria-expanded="false" aria-controls="environment-details">
+          <span>查看测试环境信息</span>
+          <span class="environment-toggle-icon" aria-hidden="true"></span>
+        </button>
+        <div id="environment-details" class="environment-details" hidden>
+          <dl>
+            <div><dt>当前环境</dt><dd>演示环境</dd></div>
+            <div><dt>认证方式</dt><dd>模拟账号校验</dd></div>
+            <div><dt>数据范围</dt><dd>仅用于原型评审</dd></div>
+          </dl>
+        </div>
+      </div>
+      <div class="brand-status"><span class="status-dot" aria-hidden="true"></span><span>演示环境运行正常</span><span class="brand-status-separator" aria-hidden="true">·</span><span>无外部请求</span></div>
+    </section>
+
+    <section class="login-main">
+      <div class="login-panel">
+        <header class="login-heading">
+          <span class="environment-badge">测试环境</span>
+          <h2>登录账号</h2>
+          <p>使用组织账号进入工作台</p>
+        </header>
+
+        <div id="notice" class="form-notice" role="status" aria-live="polite" hidden></div>
+
+        <form id="login-form" novalidate>
+          <div class="field-group">
+            <label for="username">账号</label>
+            <input id="username" name="username" type="text" autocomplete="username" placeholder="请输入账号" aria-describedby="username-error">
+            <p id="username-error" class="field-error"></p>
+          </div>
+
+          <div class="field-group">
+            <label for="password">密码</label>
+            <div class="password-control">
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="请输入密码" aria-describedby="password-error">
+              <button id="toggle-password" class="password-toggle" type="button" aria-label="显示密码" title="显示密码">显示</button>
+            </div>
+            <p id="password-error" class="field-error"></p>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-option"><input id="remember" type="checkbox">记住账号</label>
+            <button id="forgot-password" class="text-button" type="button">忘记密码</button>
+          </div>
+
+          <button id="submit-button" class="submit-button" type="submit">
+            <span class="button-label">登录</span>
+            <span class="button-spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+
+        <footer class="login-footer">
+          <span>受保护的组织入口</span>
+          <span>原型版本 v1.3</span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script data-source="./fixtures.js">
+window.LOGIN_PROTOTYPE_CONFIG = {
+  username: 'demo-admin',
+  password: 'Demo@123',
+  storageKey: 'vpw-login-demo-username',
+  workspaceName: '测试工作区',
+  delayMs: 550
+};
+
+</script>
+  <script data-source="./page.js">
+(function () {
+  var config = window.LOGIN_PROTOTYPE_CONFIG;
+  var form = document.getElementById('login-form');
+  var username = document.getElementById('username');
+  var password = document.getElementById('password');
+  var remember = document.getElementById('remember');
+  var submitButton = document.getElementById('submit-button');
+  var togglePassword = document.getElementById('toggle-password');
+  var environmentToggle = document.getElementById('environment-toggle');
+  var environmentDetails = document.getElementById('environment-details');
+  var notice = document.getElementById('notice');
+  var submitting = false;
+
+  window.__LOGIN_PROTOTYPE_STATE__ = { submitCount: 0, networkRequests: 0 };
+
+  function setNotice(message, tone) {
+    notice.textContent = message;
+    notice.dataset.tone = tone;
+    notice.hidden = false;
+  }
+
+  function clearErrors() {
+    document.getElementById('username-error').textContent = '';
+    document.getElementById('password-error').textContent = '';
+    username.removeAttribute('aria-invalid');
+    password.removeAttribute('aria-invalid');
+    notice.hidden = true;
+  }
+
+  function showFieldError(input, message) {
+    document.getElementById(input.id + '-error').textContent = message;
+    input.setAttribute('aria-invalid', 'true');
+  }
+
+  function validate() {
+    var valid = true;
+    if (!username.value.trim()) {
+      showFieldError(username, '请输入账号');
+      valid = false;
+    }
+    if (!password.value) {
+      showFieldError(password, '请输入密码');
+      valid = false;
+    }
+    if (!valid) {
+      setNotice('请检查表单中的必填项。', 'danger');
+      (username.hasAttribute('aria-invalid') ? username : password).focus();
+    }
+    return valid;
+  }
+
+  function setSubmitting(active) {
+    submitting = active;
+    submitButton.disabled = active;
+    username.disabled = active;
+    password.disabled = active;
+    remember.disabled = active;
+    togglePassword.disabled = active;
+    submitButton.classList.toggle('is-loading', active);
+    submitButton.querySelector('.button-label').textContent = active ? '登录中' : '登录';
+  }
+
+  function persistUsername() {
+    if (remember.checked) localStorage.setItem(config.storageKey, username.value.trim());
+    else localStorage.removeItem(config.storageKey);
+  }
+
+  togglePassword.addEventListener('click', function () {
+    var visible = password.type === 'text';
+    password.type = visible ? 'password' : 'text';
+    togglePassword.textContent = visible ? '显示' : '隐藏';
+    togglePassword.setAttribute('aria-label', visible ? '显示密码' : '隐藏密码');
+    togglePassword.title = visible ? '显示密码' : '隐藏密码';
+    password.focus();
+  });
+
+  environmentToggle.addEventListener('click', function () {
+    var expanded = environmentToggle.getAttribute('aria-expanded') === 'true';
+    environmentToggle.setAttribute('aria-expanded', String(!expanded));
+    environmentDetails.hidden = expanded;
+  });
+
+  document.getElementById('forgot-password').addEventListener('click', function () {
+    clearErrors();
+    setNotice('这是交互原型。正式系统将从此处进入密码找回流程。', 'info');
+  });
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    if (submitting) return;
+
+    clearErrors();
+    if (!validate()) return;
+
+    setSubmitting(true);
+    window.__LOGIN_PROTOTYPE_STATE__.submitCount += 1;
+    persistUsername();
+
+    window.setTimeout(function () {
+      var success = username.value.trim() === config.username && password.value === config.password;
+      setSubmitting(false);
+      if (success) {
+        password.value = '';
+        setNotice('验证通过，正在进入' + config.workspaceName + '。', 'success');
+        return;
+      }
+      password.value = '';
+      setNotice('账号或密码错误，请重新输入。', 'danger');
+      password.focus();
+    }, config.delayMs);
+  });
+
+  var remembered = localStorage.getItem(config.storageKey);
+  if (remembered) {
+    username.value = remembered;
+    remember.checked = true;
+  }
+  username.focus();
+}());
+
+</script>
+</body>
+</html>

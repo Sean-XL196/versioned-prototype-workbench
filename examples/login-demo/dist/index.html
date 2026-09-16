@@ -1,0 +1,784 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>身份认证登录原型 · 版本化原型工作台</title><style>:root {
+  color-scheme: light;
+  --wb-font: Inter, "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --wb-canvas: #f3f5f6;
+  --wb-surface: #ffffff;
+  --wb-surface-muted: #f8fafb;
+  --wb-ink: #172126;
+  --wb-muted: #607078;
+  --wb-border: #d8dfe3;
+  --wb-border-strong: #b9c5ca;
+  --wb-brand: #0b6b5b;
+  --wb-brand-strong: #075448;
+  --wb-brand-soft: #e7f3f0;
+  --wb-blue: #245b8f;
+  --wb-blue-soft: #eaf2f9;
+  --wb-amber: #925706;
+  --wb-amber-soft: #fff4dc;
+  --wb-red: #b42318;
+  --wb-red-soft: #fff0ee;
+  --wb-success: #16794a;
+  --wb-success-soft: #eaf7f0;
+  --wb-sidebar: 272px;
+  --wb-header: 60px;
+  --wb-radius: 6px;
+  font-family: var(--wb-font);
+  color: var(--wb-ink);
+  background: var(--wb-canvas);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+* { box-sizing: border-box; }
+html, body { min-width: 320px; min-height: 100%; margin: 0; background: var(--wb-canvas); }
+body, button, input, select { font: inherit; letter-spacing: 0; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(36, 91, 143, 0.28); outline-offset: 2px; }
+
+.wb-shell { min-height: 100vh; }
+.wb-topbar { height: var(--wb-header); border-bottom: 1px solid var(--wb-border); padding: 0 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: var(--wb-surface); }
+.wb-brand { min-width: 0; display: flex; align-items: center; gap: 11px; }
+.wb-brand__mark { width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: #fff; background: var(--wb-brand); font-size: 12px; font-weight: 800; }
+.wb-brand__copy { min-width: 0; }
+.wb-brand__name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 760; }
+.wb-brand__meta { display: block; color: var(--wb-muted); font-size: 11px; }
+.wb-topbar__right { display: flex; align-items: center; gap: 10px; }
+.wb-overall { color: var(--wb-muted); font-size: 12px; }
+.wb-menu-button { width: 38px; height: 38px; border: 1px solid var(--wb-border-strong); border-radius: 4px; display: none; place-items: center; color: var(--wb-ink); background: var(--wb-surface); cursor: pointer; }
+
+.wb-body { min-height: calc(100vh - var(--wb-header)); display: grid; grid-template-columns: var(--wb-sidebar) minmax(0, 1fr); }
+.wb-sidebar { border-right: 1px solid var(--wb-border); padding: 18px 14px 28px; background: #f9fbfb; }
+.wb-sidebar__heading { margin: 0 8px 12px; display: flex; align-items: center; justify-content: space-between; color: var(--wb-muted); font-size: 11px; font-weight: 760; text-transform: uppercase; }
+.wb-sidebar__count { min-width: 22px; border-radius: 999px; padding: 1px 7px; color: var(--wb-brand-strong); background: var(--wb-brand-soft); text-align: center; }
+.wb-module { margin-bottom: 18px; }
+.wb-module__title { margin: 0 8px 6px; color: var(--wb-ink); font-size: 12px; font-weight: 720; }
+.wb-page-button { width: 100%; min-height: 44px; border: 0; border-radius: 5px; padding: 7px 9px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; color: var(--wb-muted); background: transparent; text-align: left; cursor: pointer; }
+.wb-page-button:hover { background: #eef2f3; }
+.wb-page-button[aria-current="page"] { color: var(--wb-brand-strong); background: var(--wb-brand-soft); }
+.wb-page-button__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 680; }
+.wb-page-button__version { color: inherit; font-size: 11px; font-variant-numeric: tabular-nums; }
+.wb-page-button__state { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.wb-state-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--wb-amber); }
+.wb-state-dot--aligned { background: var(--wb-success); }
+
+.wb-main { min-width: 0; padding-bottom: 54px; }
+.wb-summary { border-bottom: 1px solid var(--wb-border); padding: 26px clamp(18px, 3vw, 40px); background: var(--wb-surface); }
+.wb-summary__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 22px; }
+.wb-eyebrow { margin: 0 0 6px; color: var(--wb-brand-strong); font-size: 11px; font-weight: 780; text-transform: uppercase; }
+.wb-summary h1 { margin: 0; font-size: 25px; line-height: 1.25; }
+.wb-summary__description { max-width: 720px; margin: 8px 0 0; color: var(--wb-muted); }
+.wb-summary__release { border: 1px solid var(--wb-border); border-radius: var(--wb-radius); padding: 10px 12px; color: var(--wb-muted); background: var(--wb-surface-muted); font-size: 12px; }
+.wb-summary__release strong { display: block; color: var(--wb-ink); font-size: 14px; }
+.wb-stats { margin-top: 24px; border-block: 1px solid var(--wb-border); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.wb-stat { min-width: 0; padding: 13px 16px; border-right: 1px solid var(--wb-border); }
+.wb-stat:first-child { padding-left: 0; }
+.wb-stat:last-child { border-right: 0; }
+.wb-stat__label { color: var(--wb-muted); font-size: 11px; }
+.wb-stat__value { margin-top: 2px; font-size: 19px; font-weight: 760; font-variant-numeric: tabular-nums; }
+
+.wb-content { padding: 26px clamp(18px, 3vw, 40px); }
+.wb-page { display: none; }
+.wb-page.is-active { display: block; }
+.wb-page__head { margin-bottom: 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.wb-page__head h2 { margin: 0; font-size: 21px; line-height: 1.3; }
+.wb-page__path { margin-top: 5px; color: var(--wb-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.wb-actions { display: flex; align-items: center; gap: 8px; }
+.wb-button { min-height: 36px; border: 1px solid var(--wb-border-strong); border-radius: 4px; padding: 7px 12px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; color: var(--wb-ink); background: var(--wb-surface); text-decoration: none; white-space: nowrap; cursor: pointer; }
+.wb-button:hover { border-color: #89979e; background: var(--wb-surface-muted); }
+.wb-button--primary { border-color: var(--wb-brand); color: #fff; background: var(--wb-brand); }
+.wb-button--primary:hover { border-color: var(--wb-brand-strong); background: var(--wb-brand-strong); }
+
+.wb-status-strip { margin-bottom: 20px; border: 1px solid var(--wb-border); border-radius: var(--wb-radius); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--wb-surface); }
+.wb-status-item { min-width: 0; padding: 13px 15px; border-right: 1px solid var(--wb-border); }
+.wb-status-item:last-child { border-right: 0; }
+.wb-status-item__label { color: var(--wb-muted); font-size: 11px; }
+.wb-status-item__value { margin-top: 4px; overflow-wrap: anywhere; font-weight: 690; }
+.wb-badge { min-height: 23px; border: 1px solid var(--wb-border); border-radius: 999px; padding: 2px 8px; display: inline-flex; align-items: center; gap: 6px; color: var(--wb-muted); background: var(--wb-surface-muted); font-size: 11px; font-weight: 680; }
+.wb-badge::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; content: ""; }
+.wb-badge--aligned { border-color: #b9dfca; color: var(--wb-success); background: var(--wb-success-soft); }
+.wb-badge--ahead { border-color: #eed39a; color: var(--wb-amber); background: var(--wb-amber-soft); }
+
+.wb-tabs { min-height: 42px; border-bottom: 1px solid var(--wb-border); display: flex; gap: 22px; overflow-x: auto; }
+.wb-tab { min-height: 42px; border: 0; border-bottom: 2px solid transparent; padding: 0 2px; color: var(--wb-muted); background: transparent; font-weight: 680; white-space: nowrap; cursor: pointer; }
+.wb-tab[aria-selected="true"] { border-bottom-color: var(--wb-brand); color: var(--wb-brand-strong); }
+.wb-tab-panel { display: none; padding-top: 20px; }
+.wb-tab-panel.is-active { display: block; }
+
+.wb-doc-toolbar { min-height: 58px; border: 1px solid var(--wb-border); border-bottom: 0; border-radius: var(--wb-radius) var(--wb-radius) 0 0; padding: 10px 12px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; background: var(--wb-surface-muted); }
+.wb-doc-controls { min-width: 0; display: flex; align-items: flex-end; gap: 12px; }
+.wb-version-field { min-width: 190px; display: grid; gap: 5px; color: var(--wb-muted); font-size: 11px; }
+.wb-version-select { min-width: 190px; height: 36px; border: 1px solid var(--wb-border-strong); border-radius: 4px; padding: 0 34px 0 10px; color: var(--wb-ink); background: var(--wb-surface); cursor: pointer; }
+.wb-document-mode { height: 36px; border: 1px solid var(--wb-border-strong); border-radius: 4px; display: inline-flex; overflow: hidden; background: var(--wb-surface); }
+.wb-document-mode-button { min-width: 92px; border: 0; border-right: 1px solid var(--wb-border); padding: 0 12px; color: var(--wb-muted); background: transparent; font-size: 12px; font-weight: 680; cursor: pointer; }
+.wb-document-mode-button:last-child { border-right: 0; }
+.wb-document-mode-button:hover { background: var(--wb-surface-muted); }
+.wb-document-mode-button[aria-pressed="true"] { color: var(--wb-brand-strong); background: var(--wb-brand-soft); }
+.wb-version-view[hidden] { display: none; }
+.wb-document[hidden] { display: none; }
+.wb-version-trace { border: 1px solid var(--wb-border); border-bottom: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--wb-surface); }
+.wb-version-trace > div { min-width: 0; padding: 10px 12px; border-right: 1px solid var(--wb-border); display: grid; align-content: start; gap: 3px; }
+.wb-version-trace > div:last-child { border-right: 0; }
+.wb-version-trace span { color: var(--wb-muted); font-size: 11px; }
+.wb-version-trace code { overflow-wrap: anywhere; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.wb-version-link { width: fit-content; color: var(--wb-blue); font-size: 12px; text-decoration: none; }
+.wb-version-link:hover { text-decoration: underline; }
+.wb-version-empty { color: var(--wb-muted); font-size: 12px; }
+.wb-version-view .wb-doc { border-radius: 0 0 var(--wb-radius) var(--wb-radius); }
+
+.wb-overview-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr); gap: 18px; }
+.wb-section { border: 1px solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); }
+.wb-section__head { min-height: 48px; border-bottom: 1px solid var(--wb-border); padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.wb-section__head h3 { margin: 0; font-size: 14px; }
+.wb-section__body { padding: 15px; }
+.wb-timeline { margin: 0; padding: 0; list-style: none; }
+.wb-timeline li { position: relative; min-height: 52px; padding: 0 0 18px 24px; }
+.wb-timeline li::before { position: absolute; top: 5px; left: 4px; width: 8px; height: 8px; border: 2px solid var(--wb-surface); border-radius: 50%; background: var(--wb-brand); box-shadow: 0 0 0 1px var(--wb-brand); content: ""; }
+.wb-timeline li::after { position: absolute; top: 16px; bottom: 0; left: 8px; width: 1px; background: var(--wb-border); content: ""; }
+.wb-timeline li:last-child::after { display: none; }
+.wb-timeline strong { display: inline-block; min-width: 48px; }
+.wb-timeline span { color: var(--wb-muted); font-size: 12px; }
+.wb-trace-summary { display: grid; gap: 12px; }
+.wb-trace-summary div { border-bottom: 1px solid #e8edef; padding-bottom: 11px; }
+.wb-trace-summary div:last-child { border-bottom: 0; padding-bottom: 0; }
+.wb-trace-summary dt { color: var(--wb-muted); font-size: 11px; }
+.wb-trace-summary dd { margin: 3px 0 0; overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+
+.wb-doc { margin: 0; border: 1px solid var(--wb-border); border-radius: var(--wb-radius); padding: 18px; overflow: auto; color: #243036; background: var(--wb-surface); font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.wb-trace-table-wrap { overflow-x: auto; border: 1px solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); }
+.wb-trace-table { width: 100%; min-width: 780px; border-collapse: collapse; table-layout: fixed; }
+.wb-trace-table th, .wb-trace-table td { border-bottom: 1px solid #e8edef; padding: 11px 13px; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.wb-trace-table th { color: var(--wb-muted); background: var(--wb-surface-muted); font-size: 11px; }
+.wb-trace-table tr:last-child td { border-bottom: 0; }
+.wb-id { color: var(--wb-blue); font: 680 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.wb-kind { text-transform: capitalize; }
+.wb-empty { min-height: 170px; padding: 30px; display: grid; place-items: center; color: var(--wb-muted); text-align: center; }
+
+@media (max-width: 960px) {
+  .wb-body { grid-template-columns: 1fr; }
+  .wb-sidebar { position: fixed; inset: var(--wb-header) auto 0 0; z-index: 20; width: min(var(--wb-sidebar), calc(100vw - 48px)); transform: translateX(-100%); transition: transform 160ms ease; box-shadow: 16px 0 28px rgba(23, 33, 38, 0.12); }
+  .wb-sidebar.is-open { transform: translateX(0); }
+  .wb-menu-button { display: grid; }
+}
+@media (max-width: 720px) {
+  .wb-topbar { height: auto; min-height: var(--wb-header); padding: 9px 12px; }
+  .wb-overall { display: none; }
+  .wb-summary__head, .wb-page__head { flex-direction: column; }
+  .wb-summary__release { width: 100%; }
+  .wb-stats, .wb-status-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wb-stat:nth-child(2), .wb-status-item:nth-child(2) { border-right: 0; }
+  .wb-stat:nth-child(-n+2), .wb-status-item:nth-child(-n+2) { border-bottom: 1px solid var(--wb-border); }
+  .wb-stat:first-child { padding-left: 16px; }
+  .wb-overview-grid { grid-template-columns: 1fr; }
+  .wb-actions { width: 100%; }
+  .wb-actions .wb-button { flex: 1; }
+  .wb-doc-toolbar { align-items: stretch; flex-direction: column; }
+  .wb-doc-controls { align-items: stretch; flex-direction: column; }
+  .wb-version-field, .wb-version-select { width: 100%; min-width: 0; }
+  .wb-document-mode { width: 100%; }
+  .wb-document-mode-button { min-width: 0; flex: 1; }
+  .wb-version-trace { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wb-version-trace > div:nth-child(2) { border-right: 0; }
+  .wb-version-trace > div:nth-child(-n+2) { border-bottom: 1px solid var(--wb-border); }
+}
+@media (max-width: 430px) {
+  .wb-stats, .wb-status-strip { grid-template-columns: 1fr; }
+  .wb-stat, .wb-status-item { border-right: 0; border-bottom: 1px solid var(--wb-border); }
+  .wb-stat:last-child, .wb-status-item:last-child { border-bottom: 0; }
+  .wb-version-trace { grid-template-columns: 1fr; }
+  .wb-version-trace > div { border-right: 0; border-bottom: 1px solid var(--wb-border); }
+  .wb-version-trace > div:nth-child(2) { border-right: 0; }
+  .wb-version-trace > div:last-child { border-bottom: 0; }
+}
+</style></head><body><div class="wb-shell"><header class="wb-topbar"><div class="wb-brand"><button class="wb-menu-button" type="button" aria-label="打开导航" title="打开导航" aria-expanded="false">&#9776;</button><span class="wb-brand__mark" aria-hidden="true">VP</span><div class="wb-brand__copy"><span class="wb-brand__name">身份认证登录原型</span><span class="wb-brand__meta">版本化原型工作台</span></div></div><div class="wb-topbar__right"><span class="wb-overall">1 个页面中 0 个已对齐</span><span class="wb-badge wb-badge--ahead">需要处理</span></div></header><div class="wb-body"><aside class="wb-sidebar" aria-label="模块与页面"><div class="wb-sidebar__heading"><span>原型页面</span><span class="wb-sidebar__count">1</span></div><section class="wb-module"><h2 class="wb-module__title">身份认证</h2><button class="wb-page-button" type="button" data-page-key="auth/login" aria-current="page"><span class="wb-page-button__name">账号登录</span><span class="wb-page-button__version">v1.3</span><span class="wb-page-button__state"><span class="wb-state-dot"></span>文档领先 · p3</span></button></section></aside><main class="wb-main"><section class="wb-summary"><div class="wb-summary__head"><div><p class="wb-eyebrow">规格控制</p><h1>评审工作台</h1><p class="wb-summary__description">查看当前发布组成、原型对齐状态与证据链。</p></div><div class="wb-summary__release"><span>模块发布</span><strong>1 个模块中 1 个已发布</strong></div></div><div class="wb-stats"><div class="wb-stat"><div class="wb-stat__label">模块</div><div class="wb-stat__value">1</div></div><div class="wb-stat"><div class="wb-stat__label">页面</div><div class="wb-stat__value">1</div></div><div class="wb-stat"><div class="wb-stat__label">已对齐</div><div class="wb-stat__value">0</div></div><div class="wb-stat"><div class="wb-stat__label">证据 ID</div><div class="wb-stat__value">43</div></div></div></section><div class="wb-content"><section class="wb-page is-active" data-page-key="auth/login">
+    <header class="wb-page__head">
+      <div><h2>账号登录</h2><div class="wb-page__path">auth/login</div></div>
+      <div class="wb-actions"><a class="wb-button wb-button--primary" href="./auth/login.html">打开交互原型</a></div>
+    </header>
+    <div class="wb-status-strip">
+      <div class="wb-status-item"><div class="wb-status-item__label">规格版本</div><div class="wb-status-item__value">v1.3</div></div>
+      <div class="wb-status-item"><div class="wb-status-item__label">原型修订</div><div class="wb-status-item__value">p3</div></div>
+      <div class="wb-status-item"><div class="wb-status-item__label">对齐状态</div><div class="wb-status-item__value"><span class="wb-badge wb-badge--ahead">文档领先</span></div></div>
+      <div class="wb-status-item"><div class="wb-status-item__label">证据索引</div><div class="wb-status-item__value">43 个稳定 ID</div></div>
+    </div>
+    <div class="wb-tabs" role="tablist" aria-label="账号登录视图">
+      <button class="wb-tab" type="button" role="tab" aria-selected="true" data-tab="overview">概览</button>
+      <button class="wb-tab" type="button" role="tab" aria-selected="false" data-tab="development">开发规格</button>
+      <button class="wb-tab" type="button" role="tab" aria-selected="false" data-tab="testing">测试规格</button>
+      <button class="wb-tab" type="button" role="tab" aria-selected="false" data-tab="traceability">追溯矩阵</button>
+    </div>
+    <div class="wb-tab-panel is-active" data-panel="overview">
+      <div class="wb-overview-grid">
+        <section class="wb-section"><header class="wb-section__head"><h3>版本历史</h3><span class="wb-badge">已发布 4 个版本</span></header><div class="wb-section__body"><ol class="wb-timeline"><li><strong>v1.3</strong> <span>变更 · 登录工作台品牌、左侧区域交互与蓝色主题优化</span></li><li><strong>v1.2</strong> <span>变更 · 工作台默认展示本版变更并可切换完整规格</span></li><li><strong>v1.1</strong> <span>变更 · 工作台按页面版本预览开发 Markdown 并关联版本 MR/Diff 范围</span></li><li><strong>v1.0</strong> <span>基线 · 初始基线</span></li></ol></div></section>
+        <section class="wb-section"><header class="wb-section__head"><h3>交付追踪</h3></header><div class="wb-section__body"><dl class="wb-trace-summary"><div><dt>基线提交</dt><dd>7ac9eee452e7</dd></div><div><dt>实现提交</dt><dd>209f0b32f878</dd></div><div><dt>MR / PR</dt><dd>1</dd></div><div><dt>合并提交</dt><dd>未关联</dd></div></dl></div></section>
+      </div>
+    </div>
+    <div class="wb-tab-panel" data-panel="development">
+      <div class="wb-doc-toolbar">
+        <div class="wb-doc-controls">
+          <label class="wb-version-field"><span>开发文档版本</span><select class="wb-version-select" aria-label="账号登录开发文档版本"><option value="v1.3" selected>v1.3 · 变更</option><option value="v1.2">v1.2 · 变更</option><option value="v1.1">v1.1 · 变更</option><option value="v1.0">v1.0 · 基线</option></select></label>
+          <div class="wb-document-mode" role="group" aria-label="账号登录开发文档视图">
+            <button class="wb-document-mode-button" type="button" aria-pressed="true" data-document-mode="change">本版变更</button>
+            <button class="wb-document-mode-button" type="button" aria-pressed="false" data-document-mode="snapshot">完整规格</button>
+          </div>
+        </div>
+        <button class="wb-button" type="button" data-download="auth-login-dev-v1-3-change" data-download-selected data-filename="login-v1.3-change-dev.md">下载本版变更</button>
+      </div>
+      <section class="wb-version-view" data-version="v1.3">
+      <div class="wb-version-trace" aria-label="v1.3 版本追溯">
+        <div><span>基线提交</span><code>7ac9eee452e7</code></div>
+        <div><span>实现提交</span><code>209f0b32f878</code></div>
+        <div><span>MR / PR</span><a class="wb-version-link" href="https://github.com/Sean-XL196/versioned-prototype-workbench/pull/1" target="_blank" rel="noopener">查看 PR 1</a></div>
+        <div><span>版本差异</span><a class="wb-version-link wb-version-diff" href="https://github.com/Sean-XL196/versioned-prototype-workbench/compare/7ac9eee452e72ec274e7d7eea1165a629dc0618c...209f0b32f8786e91f9833ea979cf914ed86770ee" target="_blank" rel="noopener">查看本版 Diff</a></div>
+      </div>
+      <pre class="wb-doc wb-document" id="auth-login-dev-v1-3-change" data-document-mode="change" data-filename="login-v1.3-change-dev.md" data-download-label="下载本版变更"># 账号登录 - 开发变更 v1.3
+
+父版本：v1.2
+来源：`sources/login-page-v1.3.md`
+
+本版已拍板改动原型 HTML / CSS / JS；未提及的父版本规则继续有效。
+
+## 0. 客户修改点分类
+
+| 纬度 | 客户原话 | 本版条款 | 相对父版 |
+| --- | --- | --- | --- |
+| **需求变动** | 将“北辰工作台”换成“测试工作台”；登录页面改成蓝色主题。 | REQ-008：品牌文案统一为测试工作台语义；RULE-005：登录中心采用蓝色品牌色及配套状态色。 | 父版品牌文案为“北辰工作台”，主视觉为绿色。 |
+| **优化** | 登录页面左侧区域交互优化，目前看着太简陋。 | REQ-009 / INT-006：左侧增加测试环境信息展开 / 收起控件，支持键盘访问且不影响表单。 | 父版左侧仅静态展示品牌、说明和运行状态。 |
+| **缺失证据** | — | 补充 TST-012、TST-013，覆盖文案、交互、色彩和响应式回归。 | 父版未单独验证左侧展开状态和品牌色。 |
+
+## 1. 来源条目
+
+| ID | 来源原文 | 分类 |
+| --- | --- | --- |
+| SRC-004 | 登录中心品牌、左侧区域交互与蓝色主题优化。 | 需求 / 交互 / 视觉 |
+
+## 2. 本版相对上一版新增
+
+| ID | 父版本行为 | 新行为 | 关联需求 | 证据 |
+| --- | --- | --- | --- | --- |
+| CHG-003 | 左侧只显示静态品牌信息；产品名称使用“北辰工作台”。 | 左侧显示“测试工作台”，增加测试环境信息展开 / 收起区；登录中心切换为蓝色主题。 | REQ-008 / REQ-009 | ASIS-003 |
+
+## 3. 本版相对上一版调整
+
+| ID | 项 | 上一版 | 本版改为 | 影响点 |
+| --- | --- | --- | --- | --- |
+| D-008 | 品牌命名 | 北辰工作台 / 北辰演示工作区 | 测试工作台 / 测试工作区 | 页面标题、品牌锁定区、成功提示 |
+| I-006 | 左侧信息交互 | 无可操作的左侧信息面板 | “查看测试环境信息”按钮控制环境详情展开 / 收起；同步 `aria-expanded` 与 `hidden` | 左侧品牌区 |
+| R-005 | 视觉主题 | 绿色品牌背景和焦点色 | 蓝色品牌背景、按钮、焦点环和浅色状态底 | 登录中心展示层 |
+
+## 4. 本版相对上一版删除
+
+| 上一版入口或规则 | 处理 |
+| --- | --- |
+| “北辰工作台”品牌文案 | 删除并替换为“测试工作台”，不保留旧文案对照。 |
+
+## 5. 对核心流程的影响
+
+登录提交、必填校验、密码显隐、记住账号和忘记密码流程保持不变。进入页面后，用户可在左侧查看测试环境信息；展开状态只影响左侧展示，不改变账号表单状态，也不发起网络请求。品牌色调整仅影响展示层 token 和左侧背景。
+
+## 6. 实现锚点
+
+- `prototype/index.html`：品牌文案、左侧信息结构、环境详情区域。
+- `prototype/page.css`：蓝色主题、左侧层次和桌面 / 移动布局。
+- `prototype/page.js`：环境详情展开 / 收起及 `aria-expanded` 同步。
+- `prototype/fixtures.js`：成功提示使用测试工作区名称。
+
+## 7. 增量验收
+
+- [ ] TST-012 能证明 CHG-003、REQ-008 和 R-005。
+- [ ] TST-013 能证明 REQ-009、I-006 及移动端无重叠 / 溢出。
+
+未提及的父版本需求继续生效，当前完整事实以 snapshot-dev.md 为准。
+</pre>
+      <pre class="wb-doc wb-document" id="auth-login-dev-v1-3-snapshot" data-document-mode="snapshot" data-filename="login-v1.3-snapshot-dev.md" data-download-label="下载完整规格" hidden># 账号登录 - 开发规格
+
+&gt; 当前完整有效规格。版本：v1.3
+
+## 1. 目标与范围
+
+为内部业务系统提供独立、可评审的账号登录页面。页面只模拟认证交互，不连接真实后端，不代表生产安全实现。
+
+## 2. 来源与基线
+
+| ID | 来源 | 结论 |
+| --- | --- | --- |
+| SRC-001 | `sources/login-page.md` | 本版本需求与验收的唯一输入。 |
+| SRC-002 | `sources/login-page-v1.1.md` | 本版本新增设计评审工作台的版本化文档预览与 MR/Diff 追溯。 |
+| SRC-003 | `sources/login-page-v1.2.md` | 本版本新增“本版变更 / 完整规格”双视图，降低持续迭代时的评审阅读量。 |
+| SRC-004 | `sources/login-page-v1.3.md` | 本版本新增登录中心品牌、左侧信息交互和蓝色主题优化。 |
+
+本页面是全新设计，没有可核验的既有页面或 As-Is 基线。
+
+## 3. 页面需求
+
+| ID | 需求 | 证据 | 原型定位 |
+| --- | --- | --- | --- |
+| REQ-001 | 显示产品名称、登录标题和安全环境提示；桌面与移动端均保持清晰层级。 | SRC-001 | `.login-brand`、`.login-panel` |
+| REQ-002 | 提供账号输入框并在页面打开时获得焦点。 | SRC-001 | `#username` |
+| REQ-003 | 提供密码输入框以及带可访问名称的密码显隐按钮。 | SRC-001 | `#password`、`#toggle-password` |
+| REQ-004 | 提供“记住账号”复选框和“忘记密码”入口，只保存账号、不保存密码。 | SRC-001 | `#remember`、`#forgot-password` |
+| REQ-005 | 账号登录的开发规格页提供全部已发布版本选择；默认当前版本，切换后在线预览和下载目标同步变化。 | SRC-002 | `.wb-version-select`、`.wb-version-view` |
+| REQ-006 | 所选版本展示自己的基线提交、实现提交与 MR/PR 状态；同时存在基线和实现提交时提供固定范围 Diff 入口。 | SRC-002 | `.wb-version-trace`、`.wb-version-diff` |
+| REQ-007 | 每个已发布版本同时提供本版变更和完整规格视图；默认本版变更，下载目标必须与版本及视图一致。 | SRC-003 | `.wb-document-mode`、`.wb-document`、`[data-download-selected]` |
+| REQ-008 | 登录页品牌文案统一为“测试工作台 / 测试工作区”，并使用蓝色主题。 | SRC-004 | `title`、`.brand-name`、`.login-brand`、`.submit-button` |
+| REQ-009 | 左侧提供可访问的测试环境信息展开 / 收起交互且不影响登录表单。 | SRC-004 | `#environment-toggle`、`#environment-details` |
+
+## 4. 交互与规则
+
+| ID | 类型 | 规则 | 失败行为 |
+| --- | --- | --- | --- |
+| INT-001 | 登录提交 | 点击登录或按 Enter 后进入提交中状态；按钮禁用且只处理一次；完成后恢复。 | 保留账号输入并显示明确错误。 |
+| INT-002 | 密码显隐 | 点击图标在 password/text 类型之间切换，更新按钮可访问名称，不移动焦点。 | 输入内容不得丢失。 |
+| INT-003 | 辅助操作 | 勾选记住账号后刷新仍回显账号；忘记密码只显示原型说明。 | 不发起外部请求，不保存密码。 |
+| INT-004 | 版本化开发文档预览 | 切换版本时仅展示该版本的完整开发快照，并同步更新下载文件名、版本追溯和 Diff 入口。 | 所选版本缺少 MR 时明确显示“未关联 MR”，不隐藏文档。 |
+| INT-005 | 开发文档双视图 | 初次进入默认本版变更；切换视图只替换所选版本的 Markdown 与下载目标；切换版本时保留当前视图。 | 不允许正文、下载文案、文件名或追溯信息出现跨版本、跨视图错配。 |
+| INT-006 | 左侧环境信息 | 点击“查看测试环境信息”切换详情区域；按钮同步 `aria-expanded`，详情同步 `hidden`；Enter / Space 可操作。 | 详情状态不更新或影响表单时视为失败。 |
+| RULE-001 | 必填校验 | 账号和密码均必填；错误信息与字段关联，首次错误字段获得焦点。 | 表单保持原值。 |
+| RULE-002 | 演示认证 | 仅 `demo-admin / Demo@123` 返回成功，其余组合返回“账号或密码错误”。 | 不泄露具体哪个字段不匹配。 |
+| RULE-003 | 可预览版本范围 | 只列出当前发布链中的已发布版本，按版本链顺序排列，默认选中 `current.released`。 | 不展示草稿或脱离当前链的历史节点。 |
+| RULE-004 | 文档视图来源 | “本版变更”读取该版本 `change-dev.md`；“完整规格”读取 `snapshot-dev.md`；两者构建时离线内嵌。 | 不通过运行时网络请求读取 Markdown，不把增量文件标记为完整规格。 |
+| RULE-005 | 蓝色主题 | 品牌背景、主按钮、焦点环和信息状态使用蓝色及浅色配套；状态不能只依赖颜色表达。 | 对比度不足、仍显示旧绿色主视觉或出现横向溢出时视为失败。 |
+
+## 5. 状态
+
+- 初始：表单可编辑，登录按钮可用。
+- 校验失败：字段显示错误，页面提示区同步反馈。
+- 提交中：按钮显示“登录中”，全部提交入口禁用。
+- 认证失败：保留账号，清空密码并聚焦密码框。
+- 认证成功：显示“验证通过，正在进入测试工作区”，原型不真实跳转。
+- 左侧环境信息：默认收起；点击或键盘操作后展开测试环境、认证方式和数据范围，再次操作恢复收起。
+- 规格预览：默认显示 v1.3 的本版变更；可切换 v1.0/v1.1/v1.2/v1.3 与本版变更/完整规格，文档、下载与追溯信息保持同一版本和视图。
+
+## 6. 验收标准
+
+- [ ] TST-001 验证初始内容、焦点和键盘顺序。
+- [ ] TST-002 验证空账号与空密码的 RULE-001。
+- [ ] TST-003 验证错误凭据的 RULE-002。
+- [ ] TST-004 验证成功凭据和 INT-001 防重复提交。
+- [ ] TST-005 验证密码显隐、记住账号和忘记密码说明。
+- [ ] TST-006 验证 1280px 与 390px 布局无重叠和页面级横向滚动。
+- [ ] TST-007 验证按版本预览和下载开发 Markdown。
+- [ ] TST-008 验证所选版本的 MR 状态与固定提交范围 Diff。
+- [ ] TST-009 验证工作台版本工具栏在桌面与移动宽度下可用。
+- [ ] TST-010 验证双视图默认状态与同版本切换。
+- [ ] TST-011 验证跨版本切换时视图保持，且下载目标与正文一致。
+- [ ] TST-012 验证测试工作台文案、测试工作区成功提示和蓝色主题。
+- [ ] TST-013 验证左侧环境详情展开 / 收起、键盘访问、表单不回归和响应式布局。
+
+## 7. 非目标
+
+不实现注册、验证码、单点登录、真实密码找回、真实网络请求、Token 存储或权限跳转。本版本不改变登录业务表单；左侧环境详情不增加真实业务入口。工作台不负责创建或合并 MR，也不在浏览器运行时读取外部 Markdown。
+</pre>
+    </section><section class="wb-version-view" data-version="v1.2" hidden>
+      <div class="wb-version-trace" aria-label="v1.2 版本追溯">
+        <div><span>基线提交</span><code>f720192a941c</code></div>
+        <div><span>实现提交</span><code>57f778d1e483</code></div>
+        <div><span>MR / PR</span><a class="wb-version-link" href="https://github.com/Sean-XL196/versioned-prototype-workbench/pull/1" target="_blank" rel="noopener">查看 PR 1</a></div>
+        <div><span>版本差异</span><a class="wb-version-link wb-version-diff" href="https://github.com/Sean-XL196/versioned-prototype-workbench/compare/f720192a941c61310bcc04b293bf5604460e714d...57f778d1e483c8d2336480b206e33c3a69d8e1ae" target="_blank" rel="noopener">查看本版 Diff</a></div>
+      </div>
+      <pre class="wb-doc wb-document" id="auth-login-dev-v1-2-change" data-document-mode="change" data-filename="login-v1.2-change-dev.md" data-download-label="下载本版变更"># 账号登录 - 开发变更 v1.2
+
+父版本：v1.1
+来源：工作台默认展示本版变更并可切换完整规格
+
+## 1. 来源条目
+
+| ID | 来源原文 | 分类 |
+| --- | --- | --- |
+| SRC-003 | 工作台为每个版本提供“本版变更 / 完整规格”双视图，默认展示本版变更，下载目标与版本和视图同步。 | 需求 / 交互 / 上下文控制 |
+
+## 2. 生效变更
+
+| ID | 父版本行为 | 新行为 | 关联需求 | 证据 |
+| --- | --- | --- | --- | --- |
+| CHG-002 | v1.1 的开发规格页按版本只展示 `snapshot-dev.md`，评审者每次都会先看到继承后的完整内容。 | 每个版本内嵌 `change-dev.md` 与 `snapshot-dev.md`；默认显示本版变更，可切换完整规格，下载文件名与正文同步。 | REQ-007 / INT-005 / RULE-004 | ASIS-002 |
+
+## 3. 流程影响
+
+登录业务表单保持不变。本次仅调整评审工作台的开发规格区域：版本选择和文档视图成为两个独立维度。切换版本时保留当前文档视图；切换视图时保留版本与 Git/PR 追溯范围。所有 Markdown 继续在构建时内嵌，不增加服务端或网络依赖。
+
+## 4. 增量验收
+
+- [ ] TST-010 证明工作台默认显示本版变更，并可切换到同版本完整规格。
+- [ ] TST-011 证明版本和视图任一变化时，正文、下载文案、文件名与内容保持一致。
+
+未提及的父版本需求继续生效，当前完整事实以 snapshot-dev.md 为准。
+</pre>
+      <pre class="wb-doc wb-document" id="auth-login-dev-v1-2-snapshot" data-document-mode="snapshot" data-filename="login-v1.2-snapshot-dev.md" data-download-label="下载完整规格" hidden># 账号登录 - 开发规格
+
+&gt; 当前完整有效规格。版本：v1.2
+
+## 1. 目标与范围
+
+为内部业务系统提供独立、可评审的账号登录页面。页面只模拟认证交互，不连接真实后端，不代表生产安全实现。
+
+## 2. 来源与基线
+
+| ID | 来源 | 结论 |
+| --- | --- | --- |
+| SRC-001 | `sources/login-page.md` | 本版本需求与验收的唯一输入。 |
+| SRC-002 | `sources/login-page-v1.1.md` | 本版本新增设计评审工作台的版本化文档预览与 MR/Diff 追溯。 |
+| SRC-003 | `sources/login-page-v1.2.md` | 本版本新增“本版变更 / 完整规格”双视图，降低持续迭代时的评审阅读量。 |
+
+本页面是全新设计，没有可核验的既有页面或 As-Is 基线。
+
+## 3. 页面需求
+
+| ID | 需求 | 证据 | 原型定位 |
+| --- | --- | --- | --- |
+| REQ-001 | 显示产品名称、登录标题和安全环境提示；桌面与移动端均保持清晰层级。 | SRC-001 | `.login-brand`、`.login-panel` |
+| REQ-002 | 提供账号输入框并在页面打开时获得焦点。 | SRC-001 | `#username` |
+| REQ-003 | 提供密码输入框以及带可访问名称的密码显隐按钮。 | SRC-001 | `#password`、`#toggle-password` |
+| REQ-004 | 提供“记住账号”复选框和“忘记密码”入口，只保存账号、不保存密码。 | SRC-001 | `#remember`、`#forgot-password` |
+| REQ-005 | 账号登录的开发规格页提供全部已发布版本选择；默认当前版本，切换后在线预览和下载目标同步变化。 | SRC-002 | `.wb-version-select`、`.wb-version-view` |
+| REQ-006 | 所选版本展示自己的基线提交、实现提交与 MR/PR 状态；同时存在基线和实现提交时提供固定范围 Diff 入口。 | SRC-002 | `.wb-version-trace`、`.wb-version-diff` |
+| REQ-007 | 每个已发布版本同时提供本版变更和完整规格视图；默认本版变更，下载目标必须与版本及视图一致。 | SRC-003 | `.wb-document-mode`、`.wb-document`、`[data-download-selected]` |
+
+## 4. 交互与规则
+
+| ID | 类型 | 规则 | 失败行为 |
+| --- | --- | --- | --- |
+| INT-001 | 登录提交 | 点击登录或按 Enter 后进入提交中状态；按钮禁用且只处理一次；完成后恢复。 | 保留账号输入并显示明确错误。 |
+| INT-002 | 密码显隐 | 点击图标在 password/text 类型之间切换，更新按钮可访问名称，不移动焦点。 | 输入内容不得丢失。 |
+| INT-003 | 辅助操作 | 勾选记住账号后刷新仍回显账号；忘记密码只显示原型说明。 | 不发起外部请求，不保存密码。 |
+| INT-004 | 版本化开发文档预览 | 切换版本时仅展示该版本的完整开发快照，并同步更新下载文件名、版本追溯和 Diff 入口。 | 所选版本缺少 MR 时明确显示“未关联 MR”，不隐藏文档。 |
+| INT-005 | 开发文档双视图 | 初次进入默认本版变更；切换视图只替换所选版本的 Markdown 与下载目标；切换版本时保留当前视图。 | 不允许正文、下载文案、文件名或追溯信息出现跨版本、跨视图错配。 |
+| RULE-001 | 必填校验 | 账号和密码均必填；错误信息与字段关联，首次错误字段获得焦点。 | 表单保持原值。 |
+| RULE-002 | 演示认证 | 仅 `demo-admin / Demo@123` 返回成功，其余组合返回“账号或密码错误”。 | 不泄露具体哪个字段不匹配。 |
+| RULE-003 | 可预览版本范围 | 只列出当前发布链中的已发布版本，按版本链顺序排列，默认选中 `current.released`。 | 不展示草稿或脱离当前链的历史节点。 |
+| RULE-004 | 文档视图来源 | “本版变更”读取该版本 `change-dev.md`；“完整规格”读取 `snapshot-dev.md`；两者构建时离线内嵌。 | 不通过运行时网络请求读取 Markdown，不把增量文件标记为完整规格。 |
+
+## 5. 状态
+
+- 初始：表单可编辑，登录按钮可用。
+- 校验失败：字段显示错误，页面提示区同步反馈。
+- 提交中：按钮显示“登录中”，全部提交入口禁用。
+- 认证失败：保留账号，清空密码并聚焦密码框。
+- 认证成功：显示“验证通过，正在进入演示工作区”，原型不真实跳转。
+- 规格预览：默认显示 v1.2 的本版变更；可切换 v1.0/v1.1/v1.2 与本版变更/完整规格，文档、下载与追溯信息保持同一版本和视图。
+
+## 6. 验收标准
+
+- [ ] TST-001 验证初始内容、焦点和键盘顺序。
+- [ ] TST-002 验证空账号与空密码的 RULE-001。
+- [ ] TST-003 验证错误凭据的 RULE-002。
+- [ ] TST-004 验证成功凭据和 INT-001 防重复提交。
+- [ ] TST-005 验证密码显隐、记住账号和忘记密码说明。
+- [ ] TST-006 验证 1280px 与 390px 布局无重叠和页面级横向滚动。
+- [ ] TST-007 验证按版本预览和下载开发 Markdown。
+- [ ] TST-008 验证所选版本的 MR 状态与固定提交范围 Diff。
+- [ ] TST-009 验证工作台版本工具栏在桌面与移动宽度下可用。
+- [ ] TST-010 验证双视图默认状态与同版本切换。
+- [ ] TST-011 验证跨版本切换时视图保持，且下载目标与正文一致。
+
+## 7. 非目标
+
+不实现注册、验证码、单点登录、真实密码找回、真实网络请求、Token 存储或权限跳转。本版本不改变登录业务表单；工作台不负责创建或合并 MR，也不在浏览器运行时读取外部 Markdown。
+</pre>
+    </section><section class="wb-version-view" data-version="v1.1" hidden>
+      <div class="wb-version-trace" aria-label="v1.1 版本追溯">
+        <div><span>基线提交</span><code>b05892f58ecd</code></div>
+        <div><span>实现提交</span><code>dee9fd101e36</code></div>
+        <div><span>MR / PR</span><a class="wb-version-link" href="https://github.com/Sean-XL196/versioned-prototype-workbench/pull/1" target="_blank" rel="noopener">查看 PR 1</a></div>
+        <div><span>版本差异</span><a class="wb-version-link wb-version-diff" href="https://github.com/Sean-XL196/versioned-prototype-workbench/compare/b05892f58ecd8092b379e01f8a836ba9246b60d5...dee9fd101e3651a33643e6c1a86a9a646f8295cb" target="_blank" rel="noopener">查看本版 Diff</a></div>
+      </div>
+      <pre class="wb-doc wb-document" id="auth-login-dev-v1-1-change" data-document-mode="change" data-filename="login-v1.1-change-dev.md" data-download-label="下载本版变更"># 账号登录 - 开发变更 v1.1
+
+父版本：v1.0
+来源：工作台按页面版本预览开发 Markdown 并关联版本 MR/Diff 范围
+
+## 1. 来源条目
+
+| ID | 来源原文 | 分类 |
+| --- | --- | --- |
+| SRC-002 | 工作台针对每个页面提供版本选择，在线预览对应版本的开发 Markdown，并展示该版本 MR 与 Diff 范围。 | 需求 / 交互 / 追溯 |
+
+## 2. 生效变更
+
+| ID | 父版本行为 | 新行为 | 关联需求 | 证据 |
+| --- | --- | --- | --- | --- |
+| CHG-001 | 开发规格页只渲染当前发布版本，下载按钮也固定指向当前版本；版本历史与文档预览相互独立。 | 开发规格页列出本页全部已发布版本，默认当前版本；切换后同步更新在线预览、下载目标和版本追溯信息。 | REQ-005 / REQ-006 / INT-004 / RULE-003 | ASIS-001 |
+
+## 3. 流程影响
+
+登录业务表单和 v1.0 交互保持不变。本次只调整评审工作台：构建时将每个已发布版本的 `snapshot-dev.md` 与 `trace.json` 打包到独立 HTML，浏览器切换版本时不发起网络请求。v1.0 未关联 MR 时明确显示未关联；具备基线和实现提交时提供固定提交范围的 Diff 入口。
+
+## 4. 增量验收
+
+- [ ] TST-007 证明 v1.0/v1.1 在线预览和下载内容随选择同步切换。
+- [ ] TST-008 证明 MR 状态与 Diff 范围取自所选版本的 `trace.json`。
+- [ ] TST-009 证明桌面与 390px 移动宽度下版本工具栏和 Markdown 正文可用。
+
+未提及的父版本需求继续生效，当前完整事实以 snapshot-dev.md 为准。
+</pre>
+      <pre class="wb-doc wb-document" id="auth-login-dev-v1-1-snapshot" data-document-mode="snapshot" data-filename="login-v1.1-snapshot-dev.md" data-download-label="下载完整规格" hidden># 账号登录 - 开发规格
+
+&gt; 当前完整有效规格。版本：v1.1
+
+## 1. 目标与范围
+
+为内部业务系统提供独立、可评审的账号登录页面。页面只模拟认证交互，不连接真实后端，不代表生产安全实现。
+
+## 2. 来源与基线
+
+| ID | 来源 | 结论 |
+| --- | --- | --- |
+| SRC-001 | `sources/login-page.md` | 本版本需求与验收的唯一输入。 |
+| SRC-002 | `sources/login-page-v1.1.md` | 本版本新增设计评审工作台的版本化文档预览与 MR/Diff 追溯。 |
+
+本页面是全新设计，没有可核验的既有页面或 As-Is 基线。
+
+## 3. 页面需求
+
+| ID | 需求 | 证据 | 原型定位 |
+| --- | --- | --- | --- |
+| REQ-001 | 显示产品名称、登录标题和安全环境提示；桌面与移动端均保持清晰层级。 | SRC-001 | `.login-brand`、`.login-panel` |
+| REQ-002 | 提供账号输入框并在页面打开时获得焦点。 | SRC-001 | `#username` |
+| REQ-003 | 提供密码输入框以及带可访问名称的密码显隐按钮。 | SRC-001 | `#password`、`#toggle-password` |
+| REQ-004 | 提供“记住账号”复选框和“忘记密码”入口，只保存账号、不保存密码。 | SRC-001 | `#remember`、`#forgot-password` |
+| REQ-005 | 账号登录的开发规格页提供全部已发布版本选择；默认当前版本，切换后在线预览和下载目标同步变化。 | SRC-002 | `.wb-version-select`、`.wb-version-view` |
+| REQ-006 | 所选版本展示自己的基线提交、实现提交与 MR/PR 状态；同时存在基线和实现提交时提供固定范围 Diff 入口。 | SRC-002 | `.wb-version-trace`、`.wb-version-diff` |
+
+## 4. 交互与规则
+
+| ID | 类型 | 规则 | 失败行为 |
+| --- | --- | --- | --- |
+| INT-001 | 登录提交 | 点击登录或按 Enter 后进入提交中状态；按钮禁用且只处理一次；完成后恢复。 | 保留账号输入并显示明确错误。 |
+| INT-002 | 密码显隐 | 点击图标在 password/text 类型之间切换，更新按钮可访问名称，不移动焦点。 | 输入内容不得丢失。 |
+| INT-003 | 辅助操作 | 勾选记住账号后刷新仍回显账号；忘记密码只显示原型说明。 | 不发起外部请求，不保存密码。 |
+| INT-004 | 版本化开发文档预览 | 切换版本时仅展示该版本的完整开发快照，并同步更新下载文件名、版本追溯和 Diff 入口。 | 所选版本缺少 MR 时明确显示“未关联 MR”，不隐藏文档。 |
+| RULE-001 | 必填校验 | 账号和密码均必填；错误信息与字段关联，首次错误字段获得焦点。 | 表单保持原值。 |
+| RULE-002 | 演示认证 | 仅 `demo-admin / Demo@123` 返回成功，其余组合返回“账号或密码错误”。 | 不泄露具体哪个字段不匹配。 |
+| RULE-003 | 可预览版本范围 | 只列出当前发布链中的已发布版本，按版本链顺序排列，默认选中 `current.released`。 | 不展示草稿或脱离当前链的历史节点。 |
+
+## 5. 状态
+
+- 初始：表单可编辑，登录按钮可用。
+- 校验失败：字段显示错误，页面提示区同步反馈。
+- 提交中：按钮显示“登录中”，全部提交入口禁用。
+- 认证失败：保留账号，清空密码并聚焦密码框。
+- 认证成功：显示“验证通过，正在进入演示工作区”，原型不真实跳转。
+- 规格预览：默认显示 v1.1；切换 v1.0/v1.1 后文档、下载与追溯信息保持同一版本。
+
+## 6. 验收标准
+
+- [ ] TST-001 验证初始内容、焦点和键盘顺序。
+- [ ] TST-002 验证空账号与空密码的 RULE-001。
+- [ ] TST-003 验证错误凭据的 RULE-002。
+- [ ] TST-004 验证成功凭据和 INT-001 防重复提交。
+- [ ] TST-005 验证密码显隐、记住账号和忘记密码说明。
+- [ ] TST-006 验证 1280px 与 390px 布局无重叠和页面级横向滚动。
+- [ ] TST-007 验证按版本预览和下载开发 Markdown。
+- [ ] TST-008 验证所选版本的 MR 状态与固定提交范围 Diff。
+- [ ] TST-009 验证工作台版本工具栏在桌面与移动宽度下可用。
+
+## 7. 非目标
+
+不实现注册、验证码、单点登录、真实密码找回、真实网络请求、Token 存储或权限跳转。本版本不改变登录业务表单；工作台不负责创建或合并 MR。
+</pre>
+    </section><section class="wb-version-view" data-version="v1.0" hidden>
+      <div class="wb-version-trace" aria-label="v1.0 版本追溯">
+        <div><span>基线提交</span><code>6d6adae6243f</code></div>
+        <div><span>实现提交</span><code>a64460c8ce5f</code></div>
+        <div><span>MR / PR</span><span class="wb-version-empty">未关联 MR</span></div>
+        <div><span>版本差异</span><a class="wb-version-link wb-version-diff" href="https://github.com/Sean-XL196/versioned-prototype-workbench/compare/6d6adae6243f4d7ea5ce805628538f56b50cba2b...a64460c8ce5f048ac4a210826a5d154907882b45" target="_blank" rel="noopener">查看本版 Diff</a></div>
+      </div>
+      <pre class="wb-doc wb-document" id="auth-login-dev-v1-0-change" data-document-mode="change" data-filename="login-v1.0-change-dev.md" data-download-label="下载本版变更"># 账号登录 - 开发基线
+
+来源：SRC-001
+
+本基线建立账号登录页首份完整开发规格。当前有效需求以 snapshot-dev.md 为准。
+
+</pre>
+      <pre class="wb-doc wb-document" id="auth-login-dev-v1-0-snapshot" data-document-mode="snapshot" data-filename="login-v1.0-snapshot-dev.md" data-download-label="下载完整规格" hidden># 账号登录 - 开发规格
+
+&gt; 当前完整有效规格。版本：v1.0
+
+## 1. 目标与范围
+
+为内部业务系统提供独立、可评审的账号登录页面。页面只模拟认证交互，不连接真实后端，不代表生产安全实现。
+
+## 2. 来源与基线
+
+| ID | 来源 | 结论 |
+| --- | --- | --- |
+| SRC-001 | `sources/login-page.md` | 本版本需求与验收的唯一输入。 |
+
+本页面是全新设计，没有可核验的既有页面或 As-Is 基线。
+
+## 3. 页面需求
+
+| ID | 需求 | 证据 | 原型定位 |
+| --- | --- | --- | --- |
+| REQ-001 | 显示产品名称、登录标题和安全环境提示；桌面与移动端均保持清晰层级。 | SRC-001 | `.login-brand`、`.login-panel` |
+| REQ-002 | 提供账号输入框并在页面打开时获得焦点。 | SRC-001 | `#username` |
+| REQ-003 | 提供密码输入框以及带可访问名称的密码显隐按钮。 | SRC-001 | `#password`、`#toggle-password` |
+| REQ-004 | 提供“记住账号”复选框和“忘记密码”入口，只保存账号、不保存密码。 | SRC-001 | `#remember`、`#forgot-password` |
+
+## 4. 交互与规则
+
+| ID | 类型 | 规则 | 失败行为 |
+| --- | --- | --- | --- |
+| INT-001 | 登录提交 | 点击登录或按 Enter 后进入提交中状态；按钮禁用且只处理一次；完成后恢复。 | 保留账号输入并显示明确错误。 |
+| INT-002 | 密码显隐 | 点击图标在 password/text 类型之间切换，更新按钮可访问名称，不移动焦点。 | 输入内容不得丢失。 |
+| INT-003 | 辅助操作 | 勾选记住账号后刷新仍回显账号；忘记密码只显示原型说明。 | 不发起外部请求，不保存密码。 |
+| RULE-001 | 必填校验 | 账号和密码均必填；错误信息与字段关联，首次错误字段获得焦点。 | 表单保持原值。 |
+| RULE-002 | 演示认证 | 仅 `demo-admin / Demo@123` 返回成功，其余组合返回“账号或密码错误”。 | 不泄露具体哪个字段不匹配。 |
+
+## 5. 状态
+
+- 初始：表单可编辑，登录按钮可用。
+- 校验失败：字段显示错误，页面提示区同步反馈。
+- 提交中：按钮显示“登录中”，全部提交入口禁用。
+- 认证失败：保留账号，清空密码并聚焦密码框。
+- 认证成功：显示“验证通过，正在进入演示工作区”，原型不真实跳转。
+
+## 6. 验收标准
+
+- [ ] TST-001 验证初始内容、焦点和键盘顺序。
+- [ ] TST-002 验证空账号与空密码的 RULE-001。
+- [ ] TST-003 验证错误凭据的 RULE-002。
+- [ ] TST-004 验证成功凭据和 INT-001 防重复提交。
+- [ ] TST-005 验证密码显隐、记住账号和忘记密码说明。
+- [ ] TST-006 验证 1280px 与 390px 布局无重叠和页面级横向滚动。
+
+## 7. 非目标
+
+不实现注册、验证码、单点登录、真实密码找回、真实网络请求、Token 存储或权限跳转。
+
+</pre>
+    </section>
+    </div>
+    <div class="wb-tab-panel" data-panel="testing"><div class="wb-actions" style="margin-bottom:12px"><button class="wb-button" type="button" data-download="auth-login-test" data-filename="login-v1.3-test.md">下载测试规格</button></div><pre class="wb-doc" id="auth-login-test"># 账号登录 - 测试规格
+
+&gt; 当前完整有效测试规格。版本：v1.3
+
+## 1. 前置条件
+
+登录交互使用构建后的 `dist/auth/login.html`；版本化文档预览使用 `dist/index.html#auth%2Flogin`。清除登录页 localStorage 后执行首轮测试。
+
+## 2. 核心用例
+
+| ID | 操作步骤 | 预期结果 | 关联需求 |
+| --- | --- | --- | --- |
+| TST-001 | 打开页面，连续按 Tab，并在密码框按 Enter。 | 初始焦点在账号；焦点顺序符合视觉顺序；Enter 可提交；产品与环境信息可见。 | REQ-001 / REQ-002 |
+| TST-002 | 分别提交全空、仅账号、仅密码三种组合。 | 对应字段显示必填错误；首次错误字段聚焦；已有输入不丢失。 | RULE-001 / INT-001 |
+| TST-003 | 输入 `demo-admin / wrong-password` 并提交。 | 显示“账号或密码错误”；账号保留，密码清空并聚焦。 | RULE-002 / INT-001 |
+| TST-004 | 输入 `demo-admin / Demo@123`，连续点击登录。 | 只进入一次提交过程；按钮显示登录中并禁用；随后显示成功反馈且不真实跳转。 | RULE-002 / INT-001 |
+| TST-005 | 切换密码显隐；勾选记住账号后刷新；点击忘记密码。 | 密码值不丢失；刷新后仅账号回显；忘记密码显示原型说明且无网络请求。 | REQ-003 / REQ-004 / INT-002 / INT-003 |
+| TST-006 | 分别以 1280px 和 390px 打开页面。 | 表单、品牌信息和操作无重叠；长文本不溢出；页面无横向滚动。 | REQ-001 |
+| TST-007 | 打开工作台“开发规格”，依次选择 v1.0、v1.1、v1.2。 | 默认选中 v1.2；预览版本、Git/PR 追溯与 Diff 均随版本选择同步变化。 | REQ-005 / INT-004 / RULE-003 |
+| TST-008 | 在 v1.0 与 v1.1 之间切换，检查版本追溯信息与链接。 | 基线/实现提交、MR 状态均来自所选版本；v1.0 明确显示未关联 MR；Diff URL 使用该版本完整提交范围。 | REQ-006 |
+| TST-009 | 分别以 1280px 和 390px 打开工作台开发规格页。 | 版本选择、追溯信息、下载按钮和 Markdown 正文无重叠、裁切或页面级横向滚动。 | REQ-005 / REQ-006 |
+| TST-010 | 打开开发规格并检查默认正文；在“本版变更 / 完整规格”之间切换。 | 默认显示 v1.2 的本版变更；切换后显示同版本完整规格，再次切回内容恢复。 | REQ-007 / CHG-002 / INT-005 / RULE-004 |
+| TST-011 | 选择完整规格后依次切换 v1.2、v1.1、v1.0 并下载；切回本版变更重复检查。 | 视图选择跨版本保持；下载按钮文案、文件名、内容与所选版本和视图一致；无网络请求。 | REQ-007 / INT-005 |
+| TST-012 | 打开登录页并提交 `demo-admin / Demo@123`。 | 左侧顶部显示“测试工作台”；成功提示使用“测试工作区”；品牌背景、按钮和焦点反馈为蓝色主题。 | REQ-008 / CHG-003 / RULE-005 |
+| TST-013 | 点击“查看测试环境信息”，再用 Enter / Space 收起；在 1280px 与 390px 宽度重复。 | 环境详情可见性与 `aria-expanded` / `hidden` 同步；表单值不变；无横向滚动；无网络请求。 | REQ-009 / INT-006 / RULE-005 |
+
+## 3. 回归检查
+
+- [ ] 浏览器控制台无未处理异常。
+- [ ] 登录成功和失败均不会产生真实网络请求。
+- [ ] 页面刷新后密码字段始终为空。
+- [ ] 颜色不是状态信息的唯一表达方式。
+- [ ] 工作台切换版本不发起网络请求，直接打开本地 HTML 仍可使用。
+- [ ] 未选择的版本文档不会同时暴露在可见区域。
+- [ ] 同一版本中未选择的文档视图不会同时暴露在可见区域。
+</pre></div>
+    <div class="wb-tab-panel" data-panel="traceability"><div class="wb-trace-table-wrap"><table class="wb-trace-table"><thead><tr><th style="width:14%">ID</th><th style="width:12%">类型</th><th style="width:30%">摘要</th><th style="width:24%">关联 ID</th><th style="width:20%">原型定位</th></tr></thead><tbody><tr><td><span class="wb-id">SRC-001</span></td><td class="wb-kind">来源</td><td>账号登录页需求</td><td>-</td><td><code>-</code></td></tr><tr><td><span class="wb-id">REQ-001</span></td><td class="wb-kind">需求</td><td>显示产品身份、登录标题和响应式安全环境提示</td><td>SRC-001, TST-001, TST-006</td><td><code>.login-brand, .login-panel</code></td></tr><tr><td><span class="wb-id">REQ-002</span></td><td class="wb-kind">需求</td><td>提供账号输入框并在初始加载时聚焦</td><td>SRC-001, TST-001, TST-002</td><td><code>#username</code></td></tr><tr><td><span class="wb-id">REQ-003</span></td><td class="wb-kind">需求</td><td>提供密码输入和可访问的显隐控制</td><td>SRC-001, TST-005</td><td><code>#password, #toggle-password</code></td></tr><tr><td><span class="wb-id">REQ-004</span></td><td class="wb-kind">需求</td><td>提供记住账号与忘记密码辅助操作且不保存密码</td><td>SRC-001, TST-005</td><td><code>#remember, #forgot-password</code></td></tr><tr><td><span class="wb-id">INT-001</span></td><td class="wb-kind">交互</td><td>登录提交支持禁用、提交中、失败和成功状态并防重复</td><td>REQ-002, REQ-003, TST-002, TST-003, TST-004</td><td><code>#login-form, #submit-button, #notice</code></td></tr><tr><td><span class="wb-id">INT-002</span></td><td class="wb-kind">交互</td><td>密码显隐切换不丢失输入并更新可访问名称</td><td>REQ-003, TST-005</td><td><code>#toggle-password</code></td></tr><tr><td><span class="wb-id">INT-003</span></td><td class="wb-kind">交互</td><td>记住账号仅持久化账号，忘记密码不发起外部请求</td><td>REQ-004, TST-005</td><td><code>#remember, #forgot-password</code></td></tr><tr><td><span class="wb-id">RULE-001</span></td><td class="wb-kind">规则</td><td>账号和密码必填，错误与字段关联并聚焦首次错误</td><td>REQ-002, REQ-003, TST-002</td><td><code>-</code></td></tr><tr><td><span class="wb-id">RULE-002</span></td><td class="wb-kind">规则</td><td>仅演示凭据 demo-admin / Demo@123 返回成功</td><td>REQ-002, REQ-003, TST-003, TST-004</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-001</span></td><td class="wb-kind">测试</td><td>验证初始内容、焦点、键盘顺序和 Enter 提交</td><td>REQ-001, REQ-002</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-002</span></td><td class="wb-kind">测试</td><td>验证账号与密码必填校验</td><td>INT-001, RULE-001</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-003</span></td><td class="wb-kind">测试</td><td>验证错误凭据的通用错误反馈</td><td>INT-001, RULE-002</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-004</span></td><td class="wb-kind">测试</td><td>验证成功凭据、提交中状态和防重复</td><td>INT-001, RULE-002</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-005</span></td><td class="wb-kind">测试</td><td>验证密码显隐、记住账号和忘记密码</td><td>REQ-003, REQ-004, INT-002, INT-003</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-006</span></td><td class="wb-kind">测试</td><td>验证桌面与移动端布局</td><td>REQ-001</td><td><code>-</code></td></tr><tr><td><span class="wb-id">SRC-002</span></td><td class="wb-kind">来源</td><td>账号登录评审工作台 v1.1 增量需求</td><td>-</td><td><code>-</code></td></tr><tr><td><span class="wb-id">ASIS-001</span></td><td class="wb-kind">现网</td><td>开发规格页只预览并下载当前发布版本，版本历史与文档预览没有联动</td><td>-</td><td><code>-</code></td></tr><tr><td><span class="wb-id">CHG-001</span></td><td class="wb-kind">变更</td><td>开发规格页增加已发布版本选择，并同步切换预览、下载和版本追溯</td><td>SRC-002, ASIS-001, REQ-005, REQ-006</td><td><code>-</code></td></tr><tr><td><span class="wb-id">REQ-005</span></td><td class="wb-kind">需求</td><td>按页面和已发布版本在线预览、下载对应完整开发 Markdown</td><td>SRC-002, ASIS-001, TST-007, TST-009</td><td><code>.wb-version-select, .wb-version-view, [data-download-selected]</code></td></tr><tr><td><span class="wb-id">REQ-006</span></td><td class="wb-kind">需求</td><td>所选版本显示自身 Git/MR 状态，并在提交范围完整时提供固定 Diff 入口</td><td>SRC-002, ASIS-001, TST-008, TST-009</td><td><code>.wb-version-trace, .wb-version-diff</code></td></tr><tr><td><span class="wb-id">INT-004</span></td><td class="wb-kind">交互</td><td>版本切换同步更新开发文档、下载目标和追溯信息且不发起网络请求</td><td>REQ-005, REQ-006, TST-007</td><td><code>.wb-version-select, .wb-version-view</code></td></tr><tr><td><span class="wb-id">RULE-003</span></td><td class="wb-kind">规则</td><td>只展示当前发布链中的已发布版本并默认选中 current.released</td><td>REQ-005, TST-007</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-007</span></td><td class="wb-kind">测试</td><td>验证 v1.0/v1.1 开发 Markdown 预览与下载随版本同步切换</td><td>REQ-005, CHG-001, INT-004, RULE-003</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-008</span></td><td class="wb-kind">测试</td><td>验证所选版本的 Git/MR 状态与固定提交范围 Diff</td><td>REQ-006, CHG-001</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-009</span></td><td class="wb-kind">测试</td><td>验证版本化开发文档工具栏在桌面和移动宽度下可用</td><td>REQ-005, REQ-006</td><td><code>-</code></td></tr><tr><td><span class="wb-id">SRC-003</span></td><td class="wb-kind">来源</td><td>账号登录评审工作台 v1.2 双视图需求</td><td>-</td><td><code>-</code></td></tr><tr><td><span class="wb-id">ASIS-002</span></td><td class="wb-kind">现网</td><td>开发规格按版本只展示完整快照，增量评审需要重复阅读父版本内容</td><td>-</td><td><code>-</code></td></tr><tr><td><span class="wb-id">CHG-002</span></td><td class="wb-kind">变更</td><td>每个版本增加本版变更和完整规格双视图，默认本版变更并同步下载目标</td><td>SRC-003, ASIS-002, REQ-007, INT-005, RULE-004</td><td><code>-</code></td></tr><tr><td><span class="wb-id">REQ-007</span></td><td class="wb-kind">需求</td><td>每个版本提供本版变更和完整规格视图，默认变更且下载与版本和视图一致</td><td>SRC-003, ASIS-002, TST-010, TST-011</td><td><code>.wb-document-mode, .wb-document, [data-download-selected]</code></td></tr><tr><td><span class="wb-id">INT-005</span></td><td class="wb-kind">交互</td><td>视图切换同步正文与下载目标，版本切换保留所选文档视图</td><td>REQ-007, TST-010, TST-011</td><td><code>.wb-document-mode-button, .wb-version-select, [data-download-selected]</code></td></tr><tr><td><span class="wb-id">RULE-004</span></td><td class="wb-kind">规则</td><td>本版变更读取 change-dev.md，完整规格读取 snapshot-dev.md，均离线内嵌</td><td>REQ-007, TST-010</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-010</span></td><td class="wb-kind">测试</td><td>验证默认本版变更以及同版本双视图切换</td><td>REQ-007, CHG-002, INT-005, RULE-004</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-011</span></td><td class="wb-kind">测试</td><td>验证跨版本保持文档视图且下载目标与正文同步</td><td>REQ-007, INT-005</td><td><code>-</code></td></tr><tr><td><span class="wb-id">SRC-004</span></td><td class="wb-kind">来源</td><td>账号登录评审工作台 v1.3 品牌、左侧交互与蓝色主题需求</td><td>-</td><td><code>-</code></td></tr><tr><td><span class="wb-id">ASIS-003</span></td><td class="wb-kind">现网</td><td>登录页左侧使用北辰工作台品牌、绿色主题且仅为静态信息，没有可展开的环境说明</td><td>-</td><td><code>-</code></td></tr><tr><td><span class="wb-id">CHG-003</span></td><td class="wb-kind">变更</td><td>替换测试工作台品牌，增加左侧环境信息交互并切换蓝色主题</td><td>SRC-004, ASIS-003, REQ-008, REQ-009</td><td><code>-</code></td></tr><tr><td><span class="wb-id">REQ-008</span></td><td class="wb-kind">需求</td><td>登录页品牌文案统一为测试工作台 / 测试工作区并使用蓝色主题</td><td>SRC-004, ASIS-003, TST-012</td><td><code>-</code></td></tr><tr><td><span class="wb-id">REQ-009</span></td><td class="wb-kind">需求</td><td>左侧提供可访问的测试环境信息展开 / 收起交互且不影响登录表单</td><td>SRC-004, ASIS-003, TST-013</td><td><code>#environment-toggle, #environment-details</code></td></tr><tr><td><span class="wb-id">INT-006</span></td><td class="wb-kind">交互</td><td>环境信息按钮控制详情展开 / 收起并同步 aria-expanded、hidden 状态，支持 Enter / Space</td><td>REQ-009, TST-013</td><td><code>#environment-toggle, #environment-details</code></td></tr><tr><td><span class="wb-id">RULE-005</span></td><td class="wb-kind">规则</td><td>蓝色主题用于品牌背景、主按钮、焦点环和信息状态；颜色不是状态信息的唯一表达</td><td>REQ-008, TST-012, TST-013</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-012</span></td><td class="wb-kind">测试</td><td>验证测试工作台文案、测试工作区成功提示和蓝色主题</td><td>REQ-008, CHG-003, RULE-005</td><td><code>-</code></td></tr><tr><td><span class="wb-id">TST-013</span></td><td class="wb-kind">测试</td><td>验证左侧环境详情展开 / 收起、键盘访问、表单不回归和响应式布局</td><td>REQ-009, INT-006, RULE-005</td><td><code>-</code></td></tr></tbody></table></div></div>
+  </section></div></main></div></div><script>(function () {
+  var sidebar = document.querySelector('.wb-sidebar');
+  var menuButton = document.querySelector('.wb-menu-button');
+  var pageButtons = Array.prototype.slice.call(document.querySelectorAll('.wb-page-button'));
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.wb-page'));
+
+  function activatePage(key, updateHash) {
+    var target = pages.find(function (item) { return item.dataset.pageKey === key; }) || pages[0];
+    if (!target) return;
+    pages.forEach(function (item) { item.classList.toggle('is-active', item === target); });
+    pageButtons.forEach(function (item) {
+      if (item.dataset.pageKey === target.dataset.pageKey) item.setAttribute('aria-current', 'page');
+      else item.removeAttribute('aria-current');
+    });
+    if (updateHash) history.replaceState(null, '', '#' + encodeURIComponent(target.dataset.pageKey));
+    if (sidebar) sidebar.classList.remove('is-open');
+  }
+
+  function activateTab(page, tabName) {
+    var tabs = Array.prototype.slice.call(page.querySelectorAll('.wb-tab'));
+    var panels = Array.prototype.slice.call(page.querySelectorAll('.wb-tab-panel'));
+    tabs.forEach(function (tab) { tab.setAttribute('aria-selected', String(tab.dataset.tab === tabName)); });
+    panels.forEach(function (panel) { panel.classList.toggle('is-active', panel.dataset.panel === tabName); });
+  }
+
+  function activateDocumentMode(panel, requestedMode) {
+    if (!panel) return;
+    var mode = requestedMode === 'snapshot' ? 'snapshot' : 'change';
+    panel.dataset.documentMode = mode;
+    panel.querySelectorAll('.wb-document-mode-button').forEach(function (button) {
+      button.setAttribute('aria-pressed', String(button.dataset.documentMode === mode));
+    });
+    panel.querySelectorAll('.wb-document').forEach(function (documentView) {
+      documentView.hidden = documentView.dataset.documentMode !== mode;
+    });
+    var selectedVersion = panel.querySelector('.wb-version-view:not([hidden])');
+    var selectedDocument = selectedVersion && selectedVersion.querySelector('.wb-document[data-document-mode="' + mode + '"]');
+    var download = panel.querySelector('[data-download-selected]');
+    if (download && selectedDocument) {
+      download.dataset.download = selectedDocument.id;
+      download.dataset.filename = selectedDocument.dataset.filename;
+      download.textContent = selectedDocument.dataset.downloadLabel;
+    }
+  }
+
+  function activateVersion(select) {
+    var panel = select.closest('.wb-tab-panel');
+    if (!panel) return;
+    panel.querySelectorAll('.wb-version-view').forEach(function (view) {
+      var active = view.dataset.version === select.value;
+      view.hidden = !active;
+    });
+    activateDocumentMode(panel, panel.dataset.documentMode || 'change');
+  }
+
+  pageButtons.forEach(function (button) {
+    button.addEventListener('click', function () { activatePage(button.dataset.pageKey, true); });
+  });
+  pages.forEach(function (item) {
+    item.querySelectorAll('.wb-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () { activateTab(item, tab.dataset.tab); });
+    });
+    item.querySelectorAll('.wb-version-select').forEach(function (select) {
+      select.addEventListener('change', function () { activateVersion(select); });
+      activateVersion(select);
+    });
+    item.querySelectorAll('.wb-document-mode-button').forEach(function (button) {
+      button.addEventListener('click', function () {
+        activateDocumentMode(button.closest('.wb-tab-panel'), button.dataset.documentMode);
+      });
+    });
+  });
+  document.querySelectorAll('[data-download]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var source = document.getElementById(button.dataset.download);
+      if (!source) return;
+      var blob = new Blob([source.textContent], { type: 'text/markdown;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = button.dataset.filename || 'specification.md';
+      link.click();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    });
+  });
+  if (menuButton) menuButton.addEventListener('click', function () {
+    var open = sidebar.classList.toggle('is-open');
+    menuButton.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && sidebar) sidebar.classList.remove('is-open');
+  });
+
+  var requested = decodeURIComponent(location.hash.slice(1));
+  activatePage(requested || (pages[0] && pages[0].dataset.pageKey), false);
+}());
+</script></body></html>

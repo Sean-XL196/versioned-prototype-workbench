@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 2,
+  "id": "login-prototype",
+  "name": "身份认证登录原型",
+  "repository": {
+    "root": "../..",
+    "remote": "git@github.com:Sean-XL196/versioned-prototype-workbench.git"
+  },
+  "design": {
+    "standard": "operational-ui-v1",
+    "tokenFile": "shared/design-system.css"
+  },
+  "modules": [
+    "auth"
+  ]
+}

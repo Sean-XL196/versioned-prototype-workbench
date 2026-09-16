@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "revision": 2,
+  "alignedToSpec": "v1.1",
+  "evidenceIds": [
+    "CHG-001",
+    "REQ-005",
+    "REQ-006",
+    "INT-004",
+    "RULE-003"
+  ],
+  "implementationCommit": "dee9fd101e3651a33643e6c1a86a9a646f8295cb",
+  "createdAt": "2026-09-15T09:55:59.336Z",
+  "note": "v1.1 工作台开发文档版本预览与固定提交范围 Diff 已验证",
+  "hashes": {
+    "modules/auth/pages/login/prototype/fixtures.js": "cb0ada945fbdeed8a9561df4080bd79a4db77326256e52f0de5c7cc6af3791cd",
+    "modules/auth/pages/login/prototype/index.html": "c61541f959c9d8f513971b2f25eba1738e1a10241190a70024655a3eaa97fb26",
+    "modules/auth/pages/login/prototype/page.css": "1a7f37169e9800d2b00c566a50c00541dcf8b302dd9d76fa448940a6637bdfaa",
+    "modules/auth/pages/login/prototype/page.js": "476b0a2d1758b2435b0c7e5d0f8d02527560df40d7723178dc9c16ef15bb156d",
+    "shared/design-system.css": "c61673b6505c3fa3f3871ff26156441da7371335703d87a5f8516e80ba4a2d48"
+  }
+}

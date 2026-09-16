@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
-const cli = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../scripts/protoctl.mjs');
+const cli = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../skill/versioned-prototype-workbench/scripts/protoctl.mjs');
 const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'vpw-test-'));
 const repo = path.join(sandbox, 'repo');
 const project = path.join(repo, 'prototypes');
@@ -51,6 +51,7 @@ try {
   git(['init']);
   git(['config', 'user.email', 'vpw@example.test']);
   git(['config', 'user.name', 'VPW Test']);
+  git(['remote', 'add', 'origin', 'git@github.com:example/vpw-test.git']);
   write(path.join(repo, 'README.md'), '# Test repository\n');
   const seedCommit = commit('chore: seed repository');
 
@@ -111,13 +112,27 @@ try {
   run(['release', 'sales', '--root', project, '--allow-docs-ahead']);
   fs.appendFileSync(path.join(ordersRoot, 'prototype', 'page.css'), '\n.priority { color: var(--vpw-color-info); }\n');
   const implementationCommit = commit('feat: show order priority');
-  run(['link-commit', 'sales/orders', '--root', project, '--role', 'implementation', '--commit', implementationCommit]);
+  run(['link-commit', 'sales/orders', '--root', project, '--role', 'implementation', '--commit', implementationCommit, '--version', 'v1.1']);
   run(['link-commit', 'sales/orders', '--root', project, '--role', 'mr-head', '--commit', implementationCommit, '--mr-kind', 'mr', '--mr-id', '123', '--mr-url', 'https://git.example.test/mr/123']);
   run(['align', 'sales/orders', '--root', project, '--evidence', 'CHG-001,REQ-002', '--note', 'Priority interaction verified']);
   const trace = json(path.join(draftRoot, 'trace.json'));
   assert.equal(trace.repository.implementationCommit, implementationCommit);
   assert.equal(trace.changeRequest.id, '123');
   run(['release', 'sales', '--root', project]);
+  run(['build', 'all', '--root', project]);
+  const workbench = fs.readFileSync(path.join(project, 'dist', 'index.html'), 'utf8');
+  assert.match(workbench, /class="wb-version-select"/);
+  assert.match(workbench, /class="wb-document-mode"/);
+  assert.match(workbench, /aria-pressed="true" data-document-mode="change"/);
+  assert.match(workbench, /data-document-mode="snapshot"/);
+  assert.match(workbench, /data-version="v1\.0"/);
+  assert.match(workbench, /data-version="v1\.1"/);
+  assert.match(workbench, /# Orders change v1\.1/);
+  assert.match(workbench, /Show priority/);
+  assert.ok(workbench.includes('orders-v1.1-change-dev.md'));
+  assert.ok(workbench.includes('orders-v1.1-snapshot-dev.md'));
+  assert.ok(workbench.includes(`https://github.com/example/vpw-test/compare/${baselineImplementation}...${implementationCommit}`));
+  assert.ok(workbench.includes('https://git.example.test/mr/123'));
 
   const sharedCss = path.join(project, 'shared', 'shell.css');
   const originalSharedCss = fs.readFileSync(sharedCss, 'utf8');

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 2,
+  "id": "auth-r2",
+  "module": "auth",
+  "createdAt": "2026-09-15T09:55:59.410Z",
+  "allowDocsAhead": false,
+  "pages": {
+    "login": {
+      "spec": "v1.1",
+      "prototypeRevision": 2,
+      "alignedToSpec": "v1.1",
+      "status": "aligned",
+      "baselineCommit": "b05892f58ecd8092b379e01f8a836ba9246b60d5",
+      "implementationCommit": "dee9fd101e3651a33643e6c1a86a9a646f8295cb",
+      "changeRequest": {
+        "kind": null,
+        "id": null,
+        "url": null,
+        "headCommit": null,
+        "mergeCommit": null
+      }
+    }
+  }
+}

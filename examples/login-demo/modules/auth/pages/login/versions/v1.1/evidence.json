@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 2,
+  "version": "v1.1",
+  "entries": {
+    "SRC-001": {
+      "kind": "source",
+      "summary": "账号登录页需求",
+      "path": "examples/login-demo/sources/login-page.md"
+    },
+    "REQ-001": {
+      "kind": "requirement",
+      "summary": "显示产品身份、登录标题和响应式安全环境提示",
+      "sourceIds": [
+        "SRC-001"
+      ],
+      "prototypeTargets": [
+        ".login-brand",
+        ".login-panel"
+      ],
+      "testIds": [
+        "TST-001",
+        "TST-006"
+      ]
+    },
+    "REQ-002": {
+      "kind": "requirement",
+      "summary": "提供账号输入框并在初始加载时聚焦",
+      "sourceIds": [
+        "SRC-001"
+      ],
+      "prototypeTargets": [
+        "#username"
+      ],
+      "testIds": [
+        "TST-001",
+        "TST-002"
+      ]
+    },
+    "REQ-003": {
+      "kind": "requirement",
+      "summary": "提供密码输入和可访问的显隐控制",
+      "sourceIds": [
+        "SRC-001"
+      ],
+      "prototypeTargets": [
+        "#password",
+        "#toggle-password"
+      ],
+      "testIds": [
+        "TST-005"
+      ]
+    },
+    "REQ-004": {
+      "kind": "requirement",
+      "summary": "提供记住账号与忘记密码辅助操作且不保存密码",
+      "sourceIds": [
+        "SRC-001"
+      ],
+      "prototypeTargets": [
+        "#remember",
+        "#forgot-password"
+      ],
+      "testIds": [
+        "TST-005"
+      ]
+    },
+    "INT-001": {
+      "kind": "interaction",
+      "summary": "登录提交支持禁用、提交中、失败和成功状态并防重复",
+      "requirementIds": [
+        "REQ-002",
+        "REQ-003"
+      ],
+      "prototypeTargets": [
+        "#login-form",
+        "#submit-button",
+        "#notice"
+      ],
+      "testIds": [
+        "TST-002",
+        "TST-003",
+        "TST-004"
+      ]
+    },
+    "INT-002": {
+      "kind": "interaction",
+      "summary": "密码显隐切换不丢失输入并更新可访问名称",
+      "requirementIds": [
+        "REQ-003"
+      ],
+      "prototypeTargets": [
+        "#toggle-password"
+      ],
+      "testIds": [
+        "TST-005"
+      ]
+    },
+    "INT-003": {
+      "kind": "interaction",
+      "summary": "记住账号仅持久化账号，忘记密码不发起外部请求",
+      "requirementIds": [
+        "REQ-004"
+      ],
+      "prototypeTargets": [
+        "#remember",
+        "#forgot-password"
+      ],
+      "testIds": [
+        "TST-005"
+      ]
+    },
+    "RULE-001": {
+      "kind": "rule",
+      "summary": "账号和密码必填，错误与字段关联并聚焦首次错误",
+      "requirementIds": [
+        "REQ-002",
+        "REQ-003"
+      ],
+      "testIds": [
+        "TST-002"
+      ]
+    },
+    "RULE-002": {
+      "kind": "rule",
+      "summary": "仅演示凭据 demo-admin / Demo@123 返回成功",
+      "requirementIds": [
+        "REQ-002",
+        "REQ-003"
+      ],
+      "testIds": [
+        "TST-003",
+        "TST-004"
+      ]
+    },
+    "TST-001": {
+      "kind": "test",
+      "summary": "验证初始内容、焦点、键盘顺序和 Enter 提交",
+      "requirementIds": [
+        "REQ-001",
+        "REQ-002"
+      ]
+    },
+    "TST-002": {
+      "kind": "test",
+      "summary": "验证账号与密码必填校验",
+      "requirementIds": [
+        "INT-001",
+        "RULE-001"
+      ]
+    },
+    "TST-003": {
+      "kind": "test",
+      "summary": "验证错误凭据的通用错误反馈",
+      "requirementIds": [
+        "INT-001",
+        "RULE-002"
+      ]
+    },
+    "TST-004": {
+      "kind": "test",
+      "summary": "验证成功凭据、提交中状态和防重复",
+      "requirementIds": [
+        "INT-001",
+        "RULE-002"
+      ]
+    },
+    "TST-005": {
+      "kind": "test",
+      "summary": "验证密码显隐、记住账号和忘记密码",
+      "requirementIds": [
+        "REQ-003",
+        "REQ-004",
+        "INT-002",
+        "INT-003"
+      ]
+    },
+    "TST-006": {
+      "kind": "test",
+      "summary": "验证桌面与移动端布局",
+      "requirementIds": [
+        "REQ-001"
+      ]
+    },
+    "SRC-002": {
+      "kind": "source",
+      "summary": "账号登录评审工作台 v1.1 增量需求",
+      "path": "examples/login-demo/sources/login-page-v1.1.md"
+    },
+    "ASIS-001": {
+      "kind": "as-is",
+      "summary": "开发规格页只预览并下载当前发布版本，版本历史与文档预览没有联动",
+      "path": "scripts/protoctl.mjs",
+      "symbol": "renderPageWorkspace"
+    },
+    "CHG-001": {
+      "kind": "change",
+      "summary": "开发规格页增加已发布版本选择，并同步切换预览、下载和版本追溯",
+      "sourceIds": [
+        "SRC-002"
+      ],
+      "evidenceIds": [
+        "ASIS-001"
+      ],
+      "requirementIds": [
+        "REQ-005",
+        "REQ-006"
+      ]
+    },
+    "REQ-005": {
+      "kind": "requirement",
+      "summary": "按页面和已发布版本在线预览、下载对应完整开发 Markdown",
+      "sourceIds": [
+        "SRC-002"
+      ],
+      "evidenceIds": [
+        "ASIS-001"
+      ],
+      "prototypeTargets": [
+        ".wb-version-select",
+        ".wb-version-view",
+        "[data-download-selected]"
+      ],
+      "testIds": [
+        "TST-007",
+        "TST-009"
+      ]
+    },
+    "REQ-006": {
+      "kind": "requirement",
+      "summary": "所选版本显示自身 Git/MR 状态，并在提交范围完整时提供固定 Diff 入口",
+      "sourceIds": [
+        "SRC-002"
+      ],
+      "evidenceIds": [
+        "ASIS-001"
+      ],
+      "prototypeTargets": [
+        ".wb-version-trace",
+        ".wb-version-diff"
+      ],
+      "testIds": [
+        "TST-008",
+        "TST-009"
+      ]
+    },
+    "INT-004": {
+      "kind": "interaction",
+      "summary": "版本切换同步更新开发文档、下载目标和追溯信息且不发起网络请求",
+      "requirementIds": [
+        "REQ-005",
+        "REQ-006"
+      ],
+      "prototypeTargets": [
+        ".wb-version-select",
+        ".wb-version-view"
+      ],
+      "testIds": [
+        "TST-007"
+      ]
+    },
+    "RULE-003": {
+      "kind": "rule",
+      "summary": "只展示当前发布链中的已发布版本并默认选中 current.released",
+      "requirementIds": [
+        "REQ-005"
+      ],
+      "testIds": [
+        "TST-007"
+      ]
+    },
+    "TST-007": {
+      "kind": "test",
+      "summary": "验证 v1.0/v1.1 开发 Markdown 预览与下载随版本同步切换",
+      "requirementIds": [
+        "REQ-005",
+        "CHG-001",
+        "INT-004",
+        "RULE-003"
+      ]
+    },
+    "TST-008": {
+      "kind": "test",
+      "summary": "验证所选版本的 Git/MR 状态与固定提交范围 Diff",
+      "requirementIds": [
+        "REQ-006",
+        "CHG-001"
+      ]
+    },
+    "TST-009": {
+      "kind": "test",
+      "summary": "验证版本化开发文档工具栏在桌面和移动宽度下可用",
+      "requirementIds": [
+        "REQ-005",
+        "REQ-006"
+      ]
+    }
+  }
+}

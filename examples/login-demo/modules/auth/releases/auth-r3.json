@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 2,
+  "id": "auth-r3",
+  "module": "auth",
+  "createdAt": "2026-09-15T10:17:30.891Z",
+  "allowDocsAhead": false,
+  "pages": {
+    "login": {
+      "spec": "v1.2",
+      "prototypeRevision": 3,
+      "alignedToSpec": "v1.2",
+      "status": "aligned",
+      "baselineCommit": "f720192a941c61310bcc04b293bf5604460e714d",
+      "implementationCommit": "57f778d1e483c8d2336480b206e33c3a69d8e1ae",
+      "changeRequest": {
+        "kind": "pr",
+        "id": "1",
+        "url": "https://github.com/Sean-XL196/versioned-prototype-workbench/pull/1",
+        "headCommit": "57f778d1e483c8d2336480b206e33c3a69d8e1ae",
+        "mergeCommit": null
+      }
+    }
+  }
+}
