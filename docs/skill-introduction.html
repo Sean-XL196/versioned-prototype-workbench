@@ -1,0 +1,1415 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>版本化交互原型工作台 · Skill 介绍</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172126;
+      --muted: #5d6b72;
+      --line: #d8dfe3;
+      --line-strong: #bbc6cc;
+      --surface: #ffffff;
+      --canvas: #f4f6f8;
+      --canvas-blue: #edf4fa;
+      --brand: #0b6b5b;
+      --brand-strong: #075448;
+      --brand-soft: #e8f4f1;
+      --info: #245b8f;
+      --info-soft: #eaf2f9;
+      --warning: #9a5b08;
+      --warning-soft: #fff4dc;
+      --danger: #b42318;
+      --dark: #102f2a;
+      --shadow: 0 18px 48px rgba(23, 33, 38, 0.14);
+      --font: Inter, "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--surface);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.7;
+      letter-spacing: 0;
+    }
+
+    button,
+    a {
+      font: inherit;
+      letter-spacing: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid rgba(36, 91, 143, 0.34);
+      outline-offset: 3px;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 20;
+      height: 66px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .site-brand-mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      border-radius: 5px;
+      display: grid;
+      place-items: center;
+      background: #ffffff;
+      color: var(--dark);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .site-nav a {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .site-nav a:hover {
+      color: #ffffff;
+    }
+
+    .hero {
+      position: relative;
+      min-height: min(720px, 84vh);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      color: #ffffff;
+      background: var(--dark);
+    }
+
+    .hero-preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      pointer-events: none;
+      transform: scale(1.03);
+      filter: saturate(0.78) contrast(0.92);
+      opacity: 0.42;
+    }
+
+    .hero-shade {
+      position: absolute;
+      inset: 0;
+      background: rgba(5, 39, 34, 0.8);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 118px 0 82px;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #9ed8cd;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: 72px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .hero-lead {
+      max-width: 660px;
+      margin: 24px 0 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      margin-top: 34px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 42px;
+      padding: 9px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--ink);
+      background: var(--surface);
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .button:hover {
+      border-color: #8c9aa2;
+      background: var(--canvas);
+    }
+
+    .button-primary {
+      border-color: #ffffff;
+      color: var(--dark);
+      background: #ffffff;
+    }
+
+    .button-primary:hover {
+      border-color: #dbe8e5;
+      background: #dbe8e5;
+    }
+
+    .button-quiet {
+      border-color: rgba(255, 255, 255, 0.44);
+      color: #ffffff;
+      background: rgba(16, 47, 42, 0.48);
+    }
+
+    .button-quiet:hover {
+      border-color: #ffffff;
+      background: rgba(16, 47, 42, 0.75);
+    }
+
+    .hero-proof {
+      margin: 54px 0 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px 34px;
+      list-style: none;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 13px;
+    }
+
+    .hero-proof li {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .hero-proof li::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #78d0a9;
+      content: "";
+    }
+
+    .section {
+      padding: 88px 0;
+    }
+
+    .section-muted {
+      background: var(--canvas);
+    }
+
+    .section-blue {
+      background: var(--canvas-blue);
+    }
+
+    .section-dark {
+      color: #ffffff;
+      background: #16324a;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .section-heading {
+      max-width: 760px;
+      margin-bottom: 42px;
+    }
+
+    .section-heading.centered {
+      margin-right: auto;
+      margin-left: auto;
+      text-align: center;
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .section-dark .section-kicker {
+      color: #a9cce8;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .section-heading > p:last-child {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .section-dark .section-heading > p:last-child {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .outcome-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .outcome-item {
+      min-height: 210px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+    }
+
+    .outcome-index {
+      display: block;
+      margin-bottom: 30px;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .outcome-item h3 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .outcome-item p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .flow-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 36px;
+      align-items: start;
+    }
+
+    .flow-rail {
+      position: relative;
+      padding-left: 22px;
+    }
+
+    .flow-rail::before {
+      position: absolute;
+      top: 22px;
+      bottom: 22px;
+      left: 7px;
+      width: 2px;
+      background: var(--line);
+      content: "";
+    }
+
+    .flow-step {
+      position: relative;
+      width: 100%;
+      min-height: 82px;
+      padding: 14px 16px 14px 24px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .flow-step::before {
+      position: absolute;
+      left: -22px;
+      width: 16px;
+      height: 16px;
+      border: 3px solid var(--canvas);
+      border-radius: 50%;
+      background: var(--line-strong);
+      content: "";
+    }
+
+    .flow-step[aria-pressed="true"] {
+      background: var(--brand-soft);
+    }
+
+    .flow-step[aria-pressed="true"]::before {
+      background: var(--brand);
+    }
+
+    .flow-number {
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .flow-copy strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .flow-copy span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .flow-owner {
+      color: var(--info);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .flow-detail {
+      position: sticky;
+      top: 24px;
+      min-height: 350px;
+      padding: 30px;
+      border: 1px solid #b9d1e6;
+      border-radius: 6px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .flow-detail-label {
+      margin: 0;
+      color: var(--info);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .flow-detail h3 {
+      margin: 12px 0 0;
+      font-size: 24px;
+      line-height: 1.35;
+    }
+
+    .flow-detail-description {
+      margin: 14px 0 0;
+      color: var(--muted);
+    }
+
+    .flow-detail-output {
+      margin-top: 26px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .flow-detail-output span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .flow-detail-output strong {
+      display: block;
+      margin-top: 6px;
+      color: var(--brand-strong);
+      font-size: 15px;
+    }
+
+    .dev-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .dev-side {
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .dev-side h3 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .dev-side p {
+      margin: 10px 0 0;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .dev-list {
+      margin: 24px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+      list-style: none;
+    }
+
+    .dev-list li {
+      padding-left: 18px;
+      position: relative;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 14px;
+    }
+
+    .dev-list li::before {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #8ac8ef;
+      content: "";
+    }
+
+    .dev-bridge {
+      display: grid;
+      place-items: center;
+      color: #a9cce8;
+      text-align: center;
+    }
+
+    .dev-bridge span {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .dev-bridge::before,
+    .dev-bridge::after {
+      width: 2px;
+      height: 74px;
+      background: rgba(169, 204, 232, 0.44);
+      content: "";
+    }
+
+    .dev-note {
+      margin-top: 28px;
+      padding: 16px 18px;
+      border-left: 3px solid #efb957;
+      color: #fff3d8;
+      background: rgba(255, 244, 220, 0.08);
+      font-size: 14px;
+    }
+
+    .scenario-controls,
+    .audience-tabs {
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .seg-button {
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      color: var(--ink);
+      background: var(--surface);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .seg-button[aria-pressed="true"],
+    .seg-button[aria-selected="true"] {
+      border-color: var(--brand);
+      color: #ffffff;
+      background: var(--brand);
+    }
+
+    .scenario-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 32px;
+      align-items: start;
+    }
+
+    .scenario-summary h3 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .scenario-summary p {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+
+    .scenario-steps {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 1px;
+      background: var(--line);
+      list-style: none;
+    }
+
+    .scenario-steps li {
+      min-height: 72px;
+      padding: 15px 18px;
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      background: var(--surface);
+    }
+
+    .scenario-steps strong {
+      color: var(--brand);
+      font-size: 12px;
+    }
+
+    .scenario-steps span {
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .usage-layout {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .usage-step {
+      padding-top: 20px;
+      border-top: 3px solid var(--brand);
+    }
+
+    .usage-step:nth-child(2) {
+      border-top-color: var(--info);
+    }
+
+    .usage-step:nth-child(3) {
+      border-top-color: var(--warning);
+    }
+
+    .usage-step > span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .usage-step h3 {
+      margin: 8px 0 0;
+      font-size: 19px;
+    }
+
+    .usage-step p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .command-block {
+      position: relative;
+      margin-top: 18px;
+      min-height: 110px;
+      padding: 16px 16px 54px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #172126;
+      color: #d7e7e3;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .copy-button {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      min-height: 32px;
+      padding: 5px 10px;
+      border: 1px solid #5f7670;
+      border-radius: 4px;
+      color: #ffffff;
+      background: #263a36;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 12px;
+    }
+
+    .audience-panel {
+      min-height: 260px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+    }
+
+    .audience-panel h3 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .audience-panel p {
+      max-width: 720px;
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
+    .audience-list {
+      margin: 24px 0 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      list-style: none;
+    }
+
+    .audience-list li {
+      padding: 14px;
+      border-left: 3px solid var(--info);
+      background: var(--info-soft);
+      color: #193f64;
+      font-size: 13px;
+    }
+
+    .boundary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px;
+    }
+
+    .boundary-column {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+    }
+
+    .boundary-column h3 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .boundary-column ul {
+      margin: 18px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+      list-style: none;
+    }
+
+    .boundary-column li {
+      padding-left: 20px;
+      position: relative;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .boundary-column li::before {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--brand);
+      content: "";
+    }
+
+    .boundary-column:last-child li::before {
+      background: var(--warning);
+    }
+
+    .demo-frame {
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .demo-frame-bar {
+      min-height: 44px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      background: var(--canvas);
+      font-size: 12px;
+    }
+
+    .demo-frame-bar a {
+      color: var(--info);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .demo-frame iframe {
+      width: 100%;
+      height: 620px;
+      border: 0;
+      display: block;
+      background: var(--surface);
+    }
+
+    .site-footer {
+      padding: 34px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--surface);
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-inner a {
+      color: var(--info);
+      text-decoration: none;
+    }
+
+    @media (max-width: 920px) {
+      .outcome-grid,
+      .usage-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .flow-layout,
+      .scenario-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-detail {
+        position: static;
+        min-height: 0;
+      }
+
+      .dev-band {
+        grid-template-columns: 1fr;
+      }
+
+      .dev-bridge {
+        grid-template-columns: 1fr auto 1fr;
+        gap: 12px;
+      }
+
+      .dev-bridge::before,
+      .dev-bridge::after {
+        width: 100%;
+        height: 2px;
+      }
+
+      .audience-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .site-header {
+        height: auto;
+      }
+
+      .header-inner {
+        min-height: 66px;
+      }
+
+      .site-nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: 760px;
+      }
+
+      .hero-inner {
+        padding-top: 110px;
+      }
+
+      h1 {
+        font-size: 43px;
+      }
+
+      .hero-lead {
+        font-size: 16px;
+      }
+
+      .section {
+        padding: 66px 0;
+      }
+
+      h2 {
+        font-size: 28px;
+      }
+
+      .outcome-grid,
+      .usage-layout,
+      .boundary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .outcome-item {
+        min-height: auto;
+      }
+
+      .flow-step {
+        grid-template-columns: 34px minmax(0, 1fr);
+      }
+
+      .flow-owner {
+        grid-column: 2;
+      }
+
+      .demo-frame iframe {
+        height: 540px;
+      }
+
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="site-brand" href="#top" aria-label="返回页面顶部">
+        <span class="site-brand-mark" aria-hidden="true">VP</span>
+        <span>版本化交互原型工作台</span>
+      </a>
+      <nav class="site-nav" aria-label="页面导航">
+        <a href="#what">能做什么</a>
+        <a href="#flow">如何运转</a>
+        <a href="#dev">如何衔接开发</a>
+        <a href="#use">其他项目使用</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <iframe class="hero-preview" src="../examples/login-demo/dist/index.html#auth%2Flogin" title="当前登录原型工作台预览" tabindex="-1" aria-hidden="true"></iframe>
+      <div class="hero-shade"></div>
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">VERSIONED PROTOTYPE WORKBENCH</p>
+          <h1 id="hero-title">版本化交互原型工作台</h1>
+          <p class="hero-lead">把一段需求，整理成能点击的 HTML 原型、能交给开发的说明文档，以及以后查得到的版本记录。需求再变化，也不用把所有内容推倒重来。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#flow">看完整流程</a>
+            <a class="button button-quiet" href="../examples/login-demo/dist/index.html#auth%2Flogin">打开当前示例</a>
+          </div>
+          <ul class="hero-proof" aria-label="核心特点">
+            <li>页面可以真实点击</li>
+            <li>文档和原型同版本</li>
+            <li>可关联提交与 MR / PR</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="what" class="section section-muted">
+      <div class="container">
+        <header class="section-heading">
+          <p class="section-kicker">它解决什么问题</p>
+          <h2>让需求不只停留在文字里</h2>
+          <p>同一份需求会同时变成四类成果，让产品、设计、开发和测试看到的是同一件事。</p>
+        </header>
+        <div class="outcome-grid">
+          <article class="outcome-item">
+            <span class="outcome-index">01 · 可体验</span>
+            <h3>可点击的 HTML 原型</h3>
+            <p>不是静态截图。按钮、表单、成功和失败状态都可以真实演示，方便尽早发现理解偏差。</p>
+          </article>
+          <article class="outcome-item">
+            <span class="outcome-index">02 · 可执行</span>
+            <h3>开发与测试文档</h3>
+            <p>开发知道要实现什么，测试知道要验证什么。不需要重新从聊天记录中拼接完整需求。</p>
+          </article>
+          <article class="outcome-item">
+            <span class="outcome-index">03 · 可迭代</span>
+            <h3>清楚的版本链</h3>
+            <p>从 v1.0 开始，每次变化产生 v1.1、v1.2。既能只看本次变化，也能查看当前完整要求。</p>
+          </article>
+          <article class="outcome-item">
+            <span class="outcome-index">04 · 可追溯</span>
+            <h3>提交和 MR / PR 关联</h3>
+            <p>一个版本可以关联原始代码、实现提交和评审链接，之后能够准确查看这一版到底改了什么。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="flow" class="section">
+      <div class="container">
+        <header class="section-heading">
+          <p class="section-kicker">从想法到交付</p>
+          <h2>一条能反复迭代的工作链</h2>
+          <p>点击左侧步骤，查看每一步由谁参与、解决什么问题、留下什么成果。</p>
+        </header>
+        <div class="flow-layout">
+          <div class="flow-rail" role="group" aria-label="工作流程">
+            <button class="flow-step" type="button" aria-pressed="true" data-flow="0">
+              <span class="flow-number">01</span>
+              <span class="flow-copy"><strong>提出需求</strong><span>说明想解决的问题和希望看到的效果</span></span>
+              <span class="flow-owner">业务 / 产品</span>
+            </button>
+            <button class="flow-step" type="button" aria-pressed="false" data-flow="1">
+              <span class="flow-number">02</span>
+              <span class="flow-copy"><strong>生成 v1.0</strong><span>形成原型、开发文档和测试文档</span></span>
+              <span class="flow-owner">Skill</span>
+            </button>
+            <button class="flow-step" type="button" aria-pressed="false" data-flow="2">
+              <span class="flow-number">03</span>
+              <span class="flow-copy"><strong>评审确认</strong><span>直接体验交互，确认是否符合预期</span></span>
+              <span class="flow-owner">业务 / 产品 / 设计</span>
+            </button>
+            <button class="flow-step" type="button" aria-pressed="false" data-flow="3">
+              <span class="flow-number">04</span>
+              <span class="flow-copy"><strong>DEV 实现</strong><span>依据完整规格，在真实项目框架中开发</span></span>
+              <span class="flow-owner">开发</span>
+            </button>
+            <button class="flow-step" type="button" aria-pressed="false" data-flow="4">
+              <span class="flow-number">05</span>
+              <span class="flow-copy"><strong>验证和追溯</strong><span>对照原型与文档，并关联代码和 MR / PR</span></span>
+              <span class="flow-owner">开发 / 测试</span>
+            </button>
+            <button class="flow-step" type="button" aria-pressed="false" data-flow="5">
+              <span class="flow-number">06</span>
+              <span class="flow-copy"><strong>下一次变化</strong><span>追加 v1.1，不覆盖已经确认的 v1.0</span></span>
+              <span class="flow-owner">全员</span>
+            </button>
+          </div>
+          <aside class="flow-detail" aria-live="polite">
+            <p class="flow-detail-label" id="flow-detail-label">第 1 步 · 输入</p>
+            <h3 id="flow-detail-title">先说清楚要解决什么</h3>
+            <p class="flow-detail-description" id="flow-detail-description">可以是一份需求文档，也可以是一段清楚的描述。Skill 会先判断这是新页面、需求变更，还是已有原型需要调整。</p>
+            <div class="flow-detail-output">
+              <span>这一阶段留下</span>
+              <strong id="flow-detail-output">需求来源和本次范围</strong>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="dev" class="section section-dark">
+      <div class="container">
+        <header class="section-heading">
+          <p class="section-kicker">与 DEV 的关系</p>
+          <h2>原型负责讲清楚，DEV 负责做进真实系统</h2>
+          <p>两边不是重复工作。原型先把交互和规则跑通，DEV 再使用项目已有框架、接口和组件完成正式实现。</p>
+        </header>
+        <div class="dev-band">
+          <article class="dev-side">
+            <h3>Design 阶段</h3>
+            <p>由这个 Skill 产出可评审的设计事实。</p>
+            <ul class="dev-list">
+              <li>可点击 HTML，提前体验关键路径</li>
+              <li>当前完整开发规格和本版变化</li>
+              <li>测试场景、失败结果和边界条件</li>
+              <li>每条要求都能通过稳定编号找到</li>
+            </ul>
+          </article>
+          <div class="dev-bridge" aria-label="通过版本文档和稳定编号交接">
+            <span>版本文档<br>稳定编号</span>
+          </div>
+          <article class="dev-side">
+            <h3>DEV 阶段</h3>
+            <p>开发读取确认后的完整规格并进入真实代码。</p>
+            <ul class="dev-list">
+              <li>使用项目自己的 React、Vue 或其他框架</li>
+              <li>接入真实接口、权限和数据处理</li>
+              <li>提交代码并关联当前版本与 MR / PR</li>
+              <li>测试对照同版本文档验证一致性</li>
+            </ul>
+          </article>
+        </div>
+        <div class="dev-note"><strong>重要边界：</strong>默认情况下，这个 Skill 只负责原型和规格，不会自动修改正式业务代码。只有明确进入 DEV 实现阶段后，才由开发流程处理真实项目。</div>
+      </div>
+    </section>
+
+    <section class="section section-blue">
+      <div class="container">
+        <header class="section-heading">
+          <p class="section-kicker">常见场景</p>
+          <h2>不同项目，可以从不同位置开始</h2>
+          <p>选择一个最接近的情况，查看 Skill 会如何处理。</p>
+        </header>
+        <div class="scenario-controls" role="group" aria-label="选择使用场景">
+          <button class="seg-button" type="button" aria-pressed="true" data-scenario="new">从零做新页面</button>
+          <button class="seg-button" type="button" aria-pressed="false" data-scenario="change">已有页面改需求</button>
+          <button class="seg-button" type="button" aria-pressed="false" data-scenario="legacy">旧原型太大</button>
+        </div>
+        <div class="scenario-panel" aria-live="polite">
+          <div class="scenario-summary">
+            <h3 id="scenario-title">从 v1.0 建立第一份共同标准</h3>
+            <p id="scenario-description">适合新模块、新菜单或没有现成原型的项目。先确定一个可独立评审的页面，再形成第一版完整交付。</p>
+          </div>
+          <ol class="scenario-steps" id="scenario-steps">
+            <li><strong>01</strong><span>创建页面范围和 v1.0 基线。</span></li>
+            <li><strong>02</strong><span>生成 HTML 原型、开发文档和测试文档。</span></li>
+            <li><strong>03</strong><span>评审确认后，把原型标记为与 v1.0 对齐。</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="use" class="section">
+      <div class="container">
+        <header class="section-heading">
+          <p class="section-kicker">放到其他项目怎么用</p>
+          <h2>安装一次，然后在目标项目里直接提需求</h2>
+          <p>原型和文档会生成在目标项目自己的工作区，不会复用本仓库里的登录示例。</p>
+        </header>
+        <div class="usage-layout">
+          <article class="usage-step">
+            <span>第 1 步</span>
+            <h3>安装 Skill</h3>
+            <p>告诉 Codex 仓库、Skill 子目录和版本，它会安装纯 Skill 包，不会安装测试原型。</p>
+            <pre class="command-block"><code id="install-prompt">请使用 skill-installer 安装：
+仓库：Sean-XL196/versioned-prototype-workbench
+路径：skill/versioned-prototype-workbench
+名称：versioned-prototype-workbench</code><button class="copy-button" type="button" data-copy="install-prompt" aria-live="polite">复制内容</button></pre>
+          </article>
+          <article class="usage-step">
+            <span>第 2 步</span>
+            <h3>在项目中提出需求</h3>
+            <p>说明页面、目标和关键交互。资料不完整时，Skill 会先确认影响结果的问题。</p>
+            <pre class="command-block"><code id="invoke-prompt">使用 $versioned-prototype-workbench，
+根据这份需求创建 v1.0 规格文档
+和可交互 HTML 原型。</code><button class="copy-button" type="button" data-copy="invoke-prompt" aria-live="polite">复制内容</button></pre>
+          </article>
+          <article class="usage-step">
+            <span>第 3 步</span>
+            <h3>评审、迭代、交接</h3>
+            <p>打开工作台查看原型和文档。需求变化时继续追加版本，确认后交给 DEV 按完整规格实现。</p>
+            <pre class="command-block"><code id="change-prompt">继续使用 $versioned-prototype-workbench，
+把这次修改形成 v1.1，
+先更新文档，再按确认内容调整原型。</code><button class="copy-button" type="button" data-copy="change-prompt" aria-live="polite">复制内容</button></pre>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted">
+      <div class="container">
+        <header class="section-heading">
+          <p class="section-kicker">不同角色看到什么</p>
+          <h2>同一版本，给每个人合适的信息</h2>
+        </header>
+        <div class="audience-tabs" role="tablist" aria-label="选择角色">
+          <button class="seg-button" type="button" role="tab" aria-selected="true" data-audience="product">业务 / 产品</button>
+          <button class="seg-button" type="button" role="tab" aria-selected="false" data-audience="design">设计</button>
+          <button class="seg-button" type="button" role="tab" aria-selected="false" data-audience="dev">开发</button>
+          <button class="seg-button" type="button" role="tab" aria-selected="false" data-audience="test">测试</button>
+        </div>
+        <article class="audience-panel" aria-live="polite">
+          <h3 id="audience-title">业务和产品：直接体验要交付的效果</h3>
+          <p id="audience-description">无需阅读代码。通过可点击原型确认流程、文案、状态和关键规则，并通过“本版变更”快速了解这次改了什么。</p>
+          <ul class="audience-list" id="audience-list">
+            <li>可点击 HTML 原型</li>
+            <li>本版变更说明</li>
+            <li>历史版本和差异入口</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <header class="section-heading">
+          <p class="section-kicker">能力边界</p>
+          <h2>它擅长什么，也明确不替代什么</h2>
+        </header>
+        <div class="boundary-grid">
+          <article class="boundary-column">
+            <h3>适合交给它</h3>
+            <ul>
+              <li>把需求整理成可点击的页面原型</li>
+              <li>为每次需求变化建立清楚版本</li>
+              <li>同步产出开发和测试文档</li>
+              <li>拆分过大的多菜单原型</li>
+              <li>关联 Git 提交、MR / PR 和固定 Diff</li>
+            </ul>
+          </article>
+          <article class="boundary-column">
+            <h3>需要后续流程处理</h3>
+            <ul>
+              <li>正式系统的框架代码与后端接口</li>
+              <li>真实账号、权限和生产数据</li>
+              <li>上线发布、性能和安全保障</li>
+              <li>业务负责人尚未确认的规则选择</li>
+              <li>未经授权直接修改正式业务代码</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-muted">
+      <div class="container">
+        <header class="section-heading centered">
+          <p class="section-kicker">当前真实示例</p>
+          <h2>工作台把原型、版本文档和追溯放在一起</h2>
+          <p>下面直接加载仓库中的登录示例。你可以在其中切换 v1.0 到 v1.3、本版变更与完整规格。</p>
+        </header>
+        <div class="demo-frame">
+          <div class="demo-frame-bar">
+            <span>examples/login-demo/dist/index.html</span>
+            <a href="../examples/login-demo/dist/index.html#auth%2Flogin">在新页面打开</a>
+          </div>
+          <iframe src="../examples/login-demo/dist/index.html#auth%2Flogin" title="登录示例版本化工作台"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>Versioned Prototype Workbench · 让原型、文档与代码版本保持同一条线</span>
+      <a href="#top">返回顶部</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var flowData = [
+        {
+          label: '第 1 步 · 输入',
+          title: '先说清楚要解决什么',
+          description: '可以是一份需求文档，也可以是一段清楚的描述。Skill 会先判断这是新页面、需求变更，还是已有原型需要调整。',
+          output: '需求来源和本次范围'
+        },
+        {
+          label: '第 2 步 · 形成基线',
+          title: '把同一需求变成三种可用成果',
+          description: '第一版统一使用 v1.0。页面原型用于体验，开发文档用于实现，测试文档用于验收，三者引用同一组要求。',
+          output: 'v1.0 原型、开发文档、测试文档'
+        },
+        {
+          label: '第 3 步 · 评审',
+          title: '在开发之前发现理解差异',
+          description: '评审者直接点击页面，检查主流程、失败提示和关键状态。确认后的版本不会再被悄悄覆盖。',
+          output: '确认后的版本和对齐状态'
+        },
+        {
+          label: '第 4 步 · DEV',
+          title: '开发读取完整规格进入真实项目',
+          description: '开发不是照抄原型源码，而是使用项目已有框架和组件，实现当前版本的完整要求，并接入真实接口和权限。',
+          output: '正式代码和实现提交'
+        },
+        {
+          label: '第 5 步 · 验证',
+          title: '用同一个版本检查是否一致',
+          description: '测试按对应版本的测试文档执行。实现提交和 MR / PR 可以回写到版本追溯中，之后可直接查看固定范围的差异。',
+          output: '测试结果、提交记录和 Diff 入口'
+        },
+        {
+          label: '第 6 步 · 继续迭代',
+          title: '新变化形成新版本，不污染历史',
+          description: '兼容的小改动形成 v1.1、v1.2；影响较大的规则变化可以进入 v2.0。旧版本继续保留，最新版本包含当前完整事实。',
+          output: '清楚的父子版本链'
+        }
+      ];
+
+      var scenarioData = {
+        new: {
+          title: '从 v1.0 建立第一份共同标准',
+          description: '适合新模块、新菜单或没有现成原型的项目。先确定一个可独立评审的页面，再形成第一版完整交付。',
+          steps: ['创建页面范围和 v1.0 基线。', '生成 HTML 原型、开发文档和测试文档。', '评审确认后，把原型标记为与 v1.0 对齐。']
+        },
+        change: {
+          title: '用 v1.1 记录变化，不覆盖 v1.0',
+          description: '适合已经有稳定页面、又收到新需求的情况。先记录文档变化，确认后再调整原型，避免边讨论边破坏当前版本。',
+          steps: ['保留客户原话并说明相对上一版改了什么。', '形成 v1.1 的本版变化和当前完整规格。', '确认后调整原型，并关联新的实现提交和 MR / PR。']
+        },
+        legacy: {
+          title: '按菜单拆成小页面，减少后续改动成本',
+          description: '适合多个子菜单都写在一个巨大 HTML 中的旧原型。拆分后，每个页面拥有自己的版本、文档和上下文。',
+          steps: ['先盘点菜单、路由和共享状态。', '一次迁移一个页面，并声明真正需要共享的部分。', '以后只读取当前页面和当前版本，不必加载整个大原型。']
+        }
+      };
+
+      var audienceData = {
+        product: {
+          title: '业务和产品：直接体验要交付的效果',
+          description: '无需阅读代码。通过可点击原型确认流程、文案、状态和关键规则，并通过“本版变更”快速了解这次改了什么。',
+          items: ['可点击 HTML 原型', '本版变更说明', '历史版本和差异入口']
+        },
+        design: {
+          title: '设计：维护页面体验和版本一致性',
+          description: '每个菜单独立维护，先有文档再改原型。设计可以确认当前原型到底对应哪个版本，避免旧稿和新稿混在一起。',
+          items: ['页面级原型源文件', '交互与视觉标准', '原型对齐状态']
+        },
+        dev: {
+          title: '开发：读取当前完整规格，不用拼聊天记录',
+          description: 'DEV 以当前版本的完整开发文档为准，用项目已有框架完成正式实现；稳定编号帮助定位每项要求和测试。',
+          items: ['完整开发规格', '要求与规则编号', '基线、实现提交与 MR / PR']
+        },
+        test: {
+          title: '测试：按版本验证新增内容和父版本回归',
+          description: '测试文档与开发文档成对出现，既写本次新增用例，也明确哪些旧能力必须继续通过。',
+          items: ['完整测试规格', '本版新增用例', '父版本回归范围']
+        }
+      };
+
+      var flowButtons = Array.prototype.slice.call(document.querySelectorAll('[data-flow]'));
+      flowButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var index = Number(button.dataset.flow);
+          var data = flowData[index];
+          flowButtons.forEach(function (item) {
+            item.setAttribute('aria-pressed', String(item === button));
+          });
+          document.getElementById('flow-detail-label').textContent = data.label;
+          document.getElementById('flow-detail-title').textContent = data.title;
+          document.getElementById('flow-detail-description').textContent = data.description;
+          document.getElementById('flow-detail-output').textContent = data.output;
+        });
+      });
+
+      Array.prototype.slice.call(document.querySelectorAll('[data-scenario]')).forEach(function (button) {
+        button.addEventListener('click', function () {
+          var data = scenarioData[button.dataset.scenario];
+          document.querySelectorAll('[data-scenario]').forEach(function (item) {
+            item.setAttribute('aria-pressed', String(item === button));
+          });
+          document.getElementById('scenario-title').textContent = data.title;
+          document.getElementById('scenario-description').textContent = data.description;
+          document.getElementById('scenario-steps').innerHTML = data.steps.map(function (step, index) {
+            return '<li><strong>0' + (index + 1) + '</strong><span>' + step + '</span></li>';
+          }).join('');
+        });
+      });
+
+      Array.prototype.slice.call(document.querySelectorAll('[data-audience]')).forEach(function (button) {
+        button.addEventListener('click', function () {
+          var data = audienceData[button.dataset.audience];
+          document.querySelectorAll('[data-audience]').forEach(function (item) {
+            item.setAttribute('aria-selected', String(item === button));
+          });
+          document.getElementById('audience-title').textContent = data.title;
+          document.getElementById('audience-description').textContent = data.description;
+          document.getElementById('audience-list').innerHTML = data.items.map(function (item) {
+            return '<li>' + item + '</li>';
+          }).join('');
+        });
+      });
+
+      Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (button) {
+        button.addEventListener('click', function () {
+          var text = document.getElementById(button.dataset.copy).textContent;
+          var original = button.textContent;
+          function done(label) {
+            button.textContent = label;
+            window.setTimeout(function () { button.textContent = original; }, 1400);
+          }
+          function legacyCopy() {
+            var textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            var copied = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            done(copied ? '已复制' : '请手动复制');
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () { done('已复制'); }, legacyCopy);
+            return;
+          }
+          legacyCopy();
+        });
+      });
+    }());
+  </script>
+</body>
+</html>

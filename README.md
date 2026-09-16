@@ -40,3 +40,7 @@ python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
 ```
 
 根目录的 `scripts/protoctl.mjs` 只用于兼容仓库现有样例。新项目应调用已安装 Skill 内的 CLI。
+
+## 面向使用者的介绍
+
+直接打开 [`docs/skill-introduction.html`](docs/skill-introduction.html)，可查看 Skill 能力、版本流程、DEV 衔接方式和其他项目的使用方法。
