@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
-const cli = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../scripts/protoctl.mjs');
+const cli = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../skill/versioned-prototype-workbench/scripts/protoctl.mjs');
 const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'vpw-test-'));
 const repo = path.join(sandbox, 'repo');
 const project = path.join(repo, 'prototypes');
